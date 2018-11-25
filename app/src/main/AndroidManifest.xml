@@ -32,6 +32,10 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
+        <activity android:name=".ClientActivity"/>
+        <activity android:name=".LoginActivity"/>
+        <activity android:name=".EmployeeActivity"/>
+        <activity android:name=".LoginScreen"/>
     </application>
 
 </manifest>
