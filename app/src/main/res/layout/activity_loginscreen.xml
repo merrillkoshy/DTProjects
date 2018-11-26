@@ -12,12 +12,13 @@
 
 
     <ImageView
+            android:id="@+id/masthead"
             android:layout_marginTop="30dp"
             android:layout_width="match_parent"
            android:src="@mipmap/ic_launcher"
-           android:layout_height="wrap_content"/>
+           android:layout_height="120dp"/>
         <EditText
-                android:layout_marginTop="130dp"
+                android:layout_marginTop="80dp"
                 android:layout_gravity="center"
                 android:id="@+id/username"
                 android:hint="Username"
@@ -30,19 +31,17 @@
                 android:layout_gravity="center"
                 android:id="@+id/password"
                 android:hint="Password"
+                android:inputType="textPassword"
                 android:background="#FFF"
                 android:layout_width="300dp"
                 android:layout_height="30dp"/>
 
-        <Button
+        <ImageView
                 android:id="@+id/login"
                 android:layout_marginTop="20dp"
                 android:layout_gravity="center"
-                android:background="@drawable/side_nav_bar"
-                android:text="LOGIN"
-                android:textColor="@color/colorPrimary"
                 android:layout_width="100dp"
-                android:layout_height="wrap_content"/>
+                android:layout_height="100dp"/>
 
     </LinearLayout>
 </RelativeLayout>

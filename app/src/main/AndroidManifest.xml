@@ -33,9 +33,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".ClientActivity"/>
-        <activity android:name=".LoginActivity"/>
+        <activity android:name=".LoginActivity"
+                  android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
         <activity android:name=".EmployeeActivity"/>
         <activity android:name=".LoginScreen"/>
+        <activity android:name=".Admin.LoggedInAs"/>
     </application>
 
 </manifest>

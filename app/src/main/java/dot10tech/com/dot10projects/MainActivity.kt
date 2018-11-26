@@ -37,8 +37,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     fun mainPageAction(){
-        Picasso.get().load("https://www.dot10tech.com/mobileapp/assets/addnew.png").into(addProject)
-        Picasso.get().load("https://www.dot10tech.com/mobileapp/assets/ongoing.png").into(onGoingProjects)
+        Picasso.get().load("https://www.dot10tech.com/mobileapp/assets/addnew.png").placeholder(R.drawable.progress_animation).into(addProject)
+        Picasso.get().load("https://www.dot10tech.com/mobileapp/assets/ongoing.png").placeholder(R.drawable.progress_animation).into(onGoingProjects)
     }
 
     override fun onBackPressed() {
