@@ -64,33 +64,52 @@ class LoginActivity:AppCompatActivity(){
             val usernames = ArrayList<String>()
             val passwords = ArrayList<String>()
             val profilePic = ArrayList<String>()
+            val firstName = ArrayList<String>()
+            val lastName = ArrayList<String>()
 
             var i = 0
             var j = 2
             var k = 1
+            var l = 3
+            var m = 4
+
             Log.d("size", "" + credsArray.size)
             val size = credsArray.size
             while (i < size) {
                 val un = credsArray[i]
                 usernames.add(un)
-                i += 2
+                i += 5
 
             }
             while (k < size) {
                 val pw = credsArray[k]
                 passwords.add(pw)
-                k += 2
+                k += 5
             }
             while (j < size) {
                 val pw = credsArray[j]
                 profilePic.add(pw)
-                j += 2
+                j += 5
+            }
+
+            while (l < size) {
+                val pw = credsArray[l]
+                firstName.add(pw)
+                l += 5
+            }
+
+            while (m < size) {
+                val pw = credsArray[m]
+                lastName.add(pw)
+                m += 5
             }
 
             val intent=Intent(this,LoginScreen::class.java)
             intent.putExtra("usernames", usernames)
             intent.putExtra("passwords", passwords)
             intent.putExtra("profilePic", profilePic)
+            intent.putExtra("firstName", firstName)
+            intent.putExtra("lastName", lastName)
             intent.putExtra("flag",2)
             startActivity(intent)
         }

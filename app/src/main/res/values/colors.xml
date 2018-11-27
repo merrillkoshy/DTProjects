@@ -3,6 +3,7 @@
     <color name="colorPrimary">#262422</color>
     <color name="colorPrimaryDark">#000</color>
     <color name="colorAccent">#000</color>
-
     <color name="black_overlay">#66000000</color>
+    <color name="default_selected_dot_color">#ffffff</color>
+    <color name="default_dot_color">#e8e8e8</color>
 </resources>
