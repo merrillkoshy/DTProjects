@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:background="@drawable/background"
+        android:layout_height="match_parent">
+
+    <android.support.v4.view.ViewPager
+            android:id="@+id/inside_pager"
+            android:layout_width="wrap_content"
+            android:layout_height="400dp"
+            />
+
+    <dot10tech.com.dot10projects.UI.IndefinitePagerIndicator
+            android:id="@+id/recyclerview_pager_indicator"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center"
+            app:dotColor="@color/colorPrimary"
+            app:selectedDotColor="@color/colorPrimaryDark"
+            app:dotRadius="5dp"
+            app:selectedDotRadius="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+</RelativeLayout>

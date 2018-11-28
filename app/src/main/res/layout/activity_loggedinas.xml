@@ -1,0 +1,55 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             android:background="@drawable/background"
+             tools:context=".Admin.LoggedInAs">
+
+    <!-- The primary full-screen view. This can be replaced with whatever view
+         is needed to present your content, e.g. VideoView, SurfaceView,
+         TextureView, etc. -->
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+    <ImageView
+            android:id="@+id/profilePic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true" />
+    <TextView
+            android:layout_marginTop="30dp"
+            android:id="@+id/loggedinas"
+            android:textColor="#FFF"
+            android:textStyle="bold"
+            android:text="sample"
+            android:layout_marginStart="50dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textSize="40sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <TextView
+                android:layout_marginTop="20dp"
+                android:id="@+id/firstname"
+                android:textColor="#FFF"
+                android:text="sample"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textSize="30sp"
+                android:layout_marginStart="90dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        <TextView
+                android:layout_marginTop="10dp"
+                android:id="@+id/lastname"
+                android:textColor="#FFF"
+                android:text="sample"
+                android:layout_marginStart="140dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textStyle="bold"
+                android:textSize="35sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+</RelativeLayout>
