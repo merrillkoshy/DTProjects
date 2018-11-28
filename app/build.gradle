@@ -34,6 +34,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:(insert latest version)'
     implementation 'com.tbuonomo.andrui:viewpagerdotsindicator:2.0.3'
 
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
     testImplementation 'junit:junit:4.12'
     implementation 'com.facebook.fresco:fresco:1.11.0'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'

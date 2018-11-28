@@ -2,10 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="dot10tech.com.dot10projects">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
             android:allowBackup="true"
@@ -29,16 +29,19 @@
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER"/>
 
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
         <activity android:name=".ClientActivity"/>
-        <activity android:name=".LoginActivity"
-                  android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
+        <activity
+                android:name=".LoginActivity"
+                android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
         <activity android:name=".EmployeeActivity"/>
         <activity android:name=".LoginScreen"/>
         <activity android:name=".Admin.LoggedInAs"/>
-        <activity android:name=".Admin.OngoingProjects"/>
+        <activity android:name=".Admin.OngoingProjects"/>>
+        <activity android:name=".Admin.ClientDetails.ClientDetailActivity"
+                  android:theme="@style/Theme.Transparent"/>
     </application>
 
 </manifest>

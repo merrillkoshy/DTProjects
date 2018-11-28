@@ -3,11 +3,15 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:background="@drawable/background"
         app:cardCornerRadius="10dp"
+        app:cardPreventCornerOverlap="true"
+        app:cardElevation="10dp"
         android:layout_height="match_parent">
 
     <ImageView
             android:id="@+id/iv"
+            android:background="@drawable/background"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
     />

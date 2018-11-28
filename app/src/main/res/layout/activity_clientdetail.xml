@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+        android:background="@drawable/clientbg"
+        android:layout_height="match_parent">
+
+    <ImageView
+            android:id="@+id/clientLogo"
+            android:layout_width="150dp"
+            android:layout_marginTop="80dp"
+            android:layout_marginStart="30dp"
+            android:src="@drawable/projects"
+            android:layout_height="150dp" />
+    <TextView
+            android:id="@+id/clientNameTitle"
+            android:layout_marginStart="170dp"
+            android:gravity="center"
+            android:textAlignment="viewStart"
+            android:textColor="@color/colorPrimary"
+            android:layout_alignTop="@+id/clientLogo"
+            android:layout_alignStart="@+id/clientLogo"
+            android:layout_width="140dp"
+            android:text="sample"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textSize="20sp"
+            android:layout_height="55dp"/>
+    <TextView
+            android:id="@+id/clientName"
+            android:layout_marginStart="170dp"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_alignTop="@+id/clientNameTitle"
+            android:layout_alignBottom="@+id/clientLogo"
+            android:layout_alignStart="@+id/clientLogo"
+            android:layout_width="160dp"
+            android:textAlignment="viewStart"
+            android:text="sample"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:layout_height="match_parent"/>
+    <TextView
+            android:id="@+id/dates"
+            android:textSize="20sp"
+            android:text="sample\nsample"
+            android:textColor="@color/colorPrimary"
+            android:layout_alignTop="@+id/clientName"
+            android:layout_alignStart="@+id/clientLogo"
+            android:layout_marginTop="140dp"
+            android:layout_width="match_parent"
+            android:layout_height="140dp"/>
+    <TextView
+            android:id="@+id/op"
+            android:layout_alignTop="@+id/dates"
+            android:layout_marginTop="140dp"
+            android:layout_alignStart="@+id/clientLogo"
+            android:layout_alignEnd="@+id/clientLogo"
+            android:text="Overall Progress"
+            android:textColor="@color/colorPrimary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="300dp"
+            android:background="@color/colorPrimary"
+            android:layout_centerHorizontal="true"
+            android:layout_height="wrap_content"
+            android:indeterminate="false"
+            android:layout_alignTop="@+id/op"
+            android:layout_margin="20dp"/>
+
+
+
+
+</RelativeLayout>
