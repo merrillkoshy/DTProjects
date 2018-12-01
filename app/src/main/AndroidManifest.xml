@@ -42,6 +42,8 @@
         <activity android:name=".Admin.OngoingProjects"/>>
         <activity android:name=".Admin.ClientDetails.ClientDetailActivity"
                   android:theme="@style/Theme.Transparent"/>
+        <activity android:name=".Admin.AdminMenu"
+                  android:theme="@style/Theme.Transparent"/>
     </application>
 
 </manifest>

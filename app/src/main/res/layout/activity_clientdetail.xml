@@ -60,19 +60,119 @@
             android:text="Overall Progress"
             android:textColor="@color/colorPrimary"
             android:layout_width="match_parent"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textSize="18sp"
+            android:layout_height="wrap_content"/>
+    <TextView
+            android:id="@+id/opPercentage"
+            android:layout_alignTop="@+id/dates"
+            android:layout_marginTop="140dp"
+            android:layout_alignStart="@+id/op"
+            android:layout_marginStart="180dp"
+            android:layout_alignEnd="@+id/clientName"
+            android:text="Percentile"
+            android:textColor="@color/colorPrimary"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     <ProgressBar
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="300dp"
-            android:background="@color/colorPrimary"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/progressbg"
             android:layout_centerHorizontal="true"
             android:layout_height="wrap_content"
             android:indeterminate="false"
             android:layout_alignTop="@+id/op"
-            android:layout_margin="20dp"/>
+            android:layout_marginBottom="20dp"/>
+    <TextView
+            android:id="@+id/latestActivityText"
+            android:layout_alignTop="@+id/progressBar"
+            android:layout_marginTop="40dp"
+            android:layout_alignStart="@+id/clientLogo"
+            android:layout_alignEnd="@+id/clientLogo"
+            android:text="Latest Activity"
+            android:textColor="@color/colorPrimary"
+            android:layout_width="match_parent"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textSize="20sp"
+            android:layout_height="wrap_content"/>
+    <TextView
+            android:id="@+id/latestActivity"
+            android:layout_alignTop="@+id/latestActivityText"
+            android:layout_marginTop="35dp"
+            android:layout_alignStart="@+id/op"
+            android:layout_alignEnd="@+id/clientName"
+            android:text="sampleText"
+            android:textColor="@color/colorPrimary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    <TextView
+            android:id="@+id/taskDeadlineText"
+            android:layout_alignTop="@+id/latestActivity"
+            android:layout_marginTop="40dp"
+            android:layout_alignStart="@+id/clientLogo"
+            android:layout_alignEnd="@+id/clientLogo"
+            android:text="Task Deadline : "
+            android:textColor="@color/colorPrimary"
+            android:layout_width="match_parent"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textSize="20sp"
+            android:layout_height="wrap_content"/>
+    <TextView
+            android:id="@+id/taskDeadline"
+            android:layout_alignTop="@+id/latestActivity"
+            android:layout_marginTop="40dp"
+            android:layout_marginStart="180dp"
+            android:layout_alignStart="@+id/op"
+            android:layout_alignEnd="@+id/clientName"
+            android:text="sampleText"
+            android:textColor="@color/colorPrimary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
+    <TextView
+            android:id="@+id/taskStatusText"
+            android:layout_alignTop="@+id/taskDeadlineText"
+            android:layout_marginTop="40dp"
+            android:layout_alignStart="@+id/clientLogo"
+            android:layout_alignEnd="@+id/clientLogo"
+            android:text="Task Status : "
+            android:textColor="@color/colorPrimary"
+            android:layout_width="match_parent"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textSize="20sp"
+            android:layout_height="wrap_content"/>
+    <TextView
+            android:id="@+id/taskStatus"
+            android:layout_alignTop="@+id/taskDeadlineText"
+            android:layout_marginTop="40dp"
+            android:layout_marginStart="180dp"
+            android:layout_alignStart="@+id/op"
+            android:layout_alignEnd="@+id/clientName"
+            android:text="sampleText"
+            android:textColor="@color/colorPrimary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
+<ImageView
+        android:id="@+id/swipinfo"
+        android:layout_alignStart="@+id/clientLogo"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/left_chevron"
+        android:layout_marginBottom="30dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"/>
+    <TextView
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="70dp"
+            android:layout_alignStart="@+id/swipinfo"
+            android:layout_marginBottom="45dp"
+            android:layout_alignEnd="@+id/clientName"
+            android:text="Swipe left for More Actions"
+            android:textColor="#FFF"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
 
 </RelativeLayout>

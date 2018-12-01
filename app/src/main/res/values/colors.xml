@@ -9,4 +9,5 @@
     <color name="transparent">#00000000</color>
     <color name="selected_dot_color">#AD7649</color>
     <color name="dot_color">#DFB483</color>
+    <color name="orange">#FFA500</color>
 </resources>
