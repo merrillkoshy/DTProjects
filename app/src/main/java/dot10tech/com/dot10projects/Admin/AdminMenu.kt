@@ -9,6 +9,7 @@ import android.view.MotionEvent
 import com.squareup.picasso.Picasso
 import dot10tech.com.dot10projects.Admin.ClientDetails.ClientDetailActivity
 import dot10tech.com.dot10projects.R
+import dot10tech.com.dot10projects.UI.OptionsViewerAdapter
 import kotlinx.android.synthetic.main.admin_menu.*
 
 class AdminMenu:AppCompatActivity(), GestureDetector.OnGestureListener{
@@ -24,7 +25,24 @@ class AdminMenu:AppCompatActivity(), GestureDetector.OnGestureListener{
     fun initialiseWidgets(){
         Picasso.get().load("https://dot10tech.com/mobileApp/assets/team_assignment.png").fit().
             placeholder(R.drawable.progress_animation).into(teamassignmentIcon)
-        teamassignmentText.text="Team Assignment"
+        teamassignmentText.text="Team"+"\n"+"Assignment"
+
+        Picasso.get().load("https://dot10tech.com/mobileApp/assets/tasklist.png").fit().
+            placeholder(R.drawable.progress_animation).into(tasklistIcon)
+        tasklist.text="Tasklist"
+
+        optionsClicks()
+    }
+
+    fun optionsClicks(){
+
+        teamassignmentIcon.setOnClickListener {
+            val ta_intent=Intent(this,OptionsViewerAdapter::class.java)
+            ta_intent.putExtra("clientName",intent.getStringExtra("cN"))
+            startActivity(ta_intent)
+            overridePendingTransition(R.anim.animation_leave, R.anim.animation_enter)
+        }
+
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {

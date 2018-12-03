@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+        android:background="@drawable/clientbg"
+        android:layout_height="match_parent">
+
+
+    <TextView
+            android:id="@+id/clientNameinTitle"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:layout_marginTop="70dp"
+            android:textColor="@color/colorPrimary"
+            android:layout_width="140dp"
+            android:text="sample"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textSize="20sp"
+            android:layout_height="55dp"/>
+
+
+
+</RelativeLayout>

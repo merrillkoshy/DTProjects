@@ -44,6 +44,8 @@
                   android:theme="@style/Theme.Transparent"/>
         <activity android:name=".Admin.AdminMenu"
                   android:theme="@style/Theme.Transparent"/>
+        <activity android:name=".UI.OptionsViewerAdapter"
+                  android:theme="@style/Theme.Transparent"/>
     </application>
 
 </manifest>

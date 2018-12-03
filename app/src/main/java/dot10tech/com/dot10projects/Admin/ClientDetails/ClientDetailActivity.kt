@@ -76,8 +76,9 @@ class ClientDetailActivity:AppCompatActivity(), GestureDetector.OnGestureListene
 
     override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
         if (e2!!.getX() - e1!!.getX() > 50) {
-            val intent=Intent(this,AdminMenu::class.java)
-            startActivity(intent)
+            val a_intent=Intent(this,AdminMenu::class.java)
+            a_intent.putExtra("cN",intent.getStringExtra("cN"))
+            startActivity(a_intent)
             this.overridePendingTransition(R.anim.menu_drawer_close,R.anim.menu_drawer_open)
             return true;
         }

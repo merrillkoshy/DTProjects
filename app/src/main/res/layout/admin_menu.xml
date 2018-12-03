@@ -7,23 +7,86 @@
          android:layout_height="match_parent">
     <ImageView
             android:layout_marginTop="80dp"
-            android:layout_marginStart="50dp"
+            android:layout_marginStart="70dp"
             android:id="@+id/teamassignmentIcon"
             android:src="@mipmap/ic_launcher"
-            android:layout_width="50dp"
-               android:layout_height="50dp"/>
+            android:layout_width="100dp"
+               android:layout_height="100dp"/>
     <TextView
-            android:layout_alignStart="@+id/teamassignmentIcon"
+            android:layout_marginStart="60dp"
             android:layout_alignTop="@+id/teamassignmentIcon"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="100dp"
+            android:textAlignment="center"
             android:id="@+id/teamassignmentText"
             android:text="sample"
-            android:layout_alignEnd="@id/teamassignmentIcon"
+
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
             android:textColor="#FFF"
 
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"/>
+    <ImageView
+            android:layout_marginTop="80dp"
+            android:layout_marginStart="250dp"
+            android:id="@+id/tasklistIcon"
+            android:src="@mipmap/ic_launcher"
+            android:layout_width="100dp"
+            android:layout_height="100dp"/>
+    <TextView
+            android:layout_marginStart="240dp"
+            android:layout_alignTop="@+id/tasklistIcon"
+            android:layout_marginTop="100dp"
+            android:textAlignment="center"
+            android:id="@+id/tasklist"
+            android:text="sample"
+
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="#FFF"
+
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"/>
+
+    <ImageView
+            android:layout_marginTop="280dp"
+            android:layout_marginStart="70dp"
+            android:id="@+id/dummy1"
+            android:src="@mipmap/ic_launcher"
+            android:layout_width="100dp"
+            android:layout_height="100dp"/>
+    <TextView
+            android:layout_marginStart="60dp"
+            android:layout_alignTop="@+id/dummy1"
+            android:layout_marginTop="100dp"
+            android:textAlignment="center"
+            android:id="@+id/dummy1text"
+            android:text="sample"
+
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="#FFF"
+
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"/>
+    <ImageView
+            android:layout_marginTop="280dp"
+            android:layout_marginStart="250dp"
+            android:id="@+id/dummy2"
+            android:src="@mipmap/ic_launcher"
+            android:layout_width="100dp"
+            android:layout_height="100dp"/>
+    <TextView
+            android:layout_marginStart="240dp"
+            android:layout_alignTop="@+id/dummy2"
+            android:layout_marginTop="100dp"
+            android:textAlignment="center"
+            android:id="@+id/dummy2text"
+            android:text="sample"
+
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+            android:textColor="#FFF"
+
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"/>
+
     <ImageView
             android:id="@+id/swipinfo"
             android:layout_alignParentEnd="true"
