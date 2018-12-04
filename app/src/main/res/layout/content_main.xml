@@ -32,6 +32,13 @@
 
         <ImageView
                 android:layout_marginTop="20dp"
+                android:id="@+id/editProject"
+                android:layout_gravity="center"
+                android:layout_width="350dp"
+                android:layout_height="200dp"/>
+
+        <ImageView
+                android:layout_marginTop="20dp"
             android:id="@+id/onGoingProjects"
                 android:layout_gravity="center"
             android:layout_width="350dp"

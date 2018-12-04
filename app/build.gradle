@@ -33,10 +33,15 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.squareup.okhttp3:okhttp:(insert latest version)'
     implementation 'com.tbuonomo.andrui:viewpagerdotsindicator:2.0.3'
-
+    implementation 'com.android.volley:volley:1.1.1'
     implementation 'com.android.support:recyclerview-v7:28.0.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.0.2'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.0.1'
+
+
     testImplementation 'junit:junit:4.12'
     implementation 'com.facebook.fresco:fresco:1.11.0'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
 }

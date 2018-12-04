@@ -13,6 +13,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import com.squareup.picasso.Picasso
+import dot10tech.com.dot10projects.Admin.ClientDetails.AddNewProjectasAdmin
+import dot10tech.com.dot10projects.Admin.EditProjectasAdmin
 import dot10tech.com.dot10projects.Admin.OngoingProjects
 import kotlinx.android.synthetic.main.content_main.*
 import okhttp3.*
@@ -60,6 +62,66 @@ class MainActivity : AppCompatActivity() {
     fun mainPageAction(){
 
         Picasso.get().load("https://www.dot10tech.com/mobileapp/assets/addnew.png").placeholder(R.drawable.progress_animation).into(addProject)
+        addProject.setOnClickListener {
+            val clientArray = target.replace("[", "").replace("]", "").replace("\"", "").split(",")
+            val clientName = ArrayList<String>()
+            val clientImageUrl = ArrayList<String>()
+
+
+            var i = 0
+            var k = 1
+
+            Log.d("size", "" + clientArray.size)
+            val size = clientArray.size
+            while (i < size) {
+                val un = clientArray[i]
+                clientName.add(un)
+                i += 2
+
+            }
+            while (k < size) {
+                val pw = clientArray[k]
+                clientImageUrl.add(pw)
+                k += 2
+            }
+
+            val intent=Intent(this,AddNewProjectasAdmin::class.java)
+            intent.putExtra("cN", clientName)
+            intent.putExtra("ciU", clientImageUrl)
+            startActivity(intent)
+        }
+
+        Picasso.get().load("https://www.dot10tech.com/mobileapp/assets/editProject.png").placeholder(R.drawable.progress_animation).into(editProject)
+        editProject.setOnClickListener {
+            val clientArray = target.replace("[", "").replace("]", "").replace("\"", "").split(",")
+            val clientName = ArrayList<String>()
+            val clientImageUrl = ArrayList<String>()
+
+
+            var i = 0
+            var k = 1
+
+            Log.d("size", "" + clientArray.size)
+            val size = clientArray.size
+            while (i < size) {
+                val un = clientArray[i]
+                clientName.add(un)
+                i += 2
+
+            }
+            while (k < size) {
+                val pw = clientArray[k]
+                clientImageUrl.add(pw)
+                k += 2
+            }
+
+            val intent=Intent(this,EditProjectasAdmin::class.java)
+            intent.putExtra("cN", clientName)
+            intent.putExtra("ciU", clientImageUrl)
+            startActivity(intent)
+
+        }
+
         Picasso.get().load("https://www.dot10tech.com/mobileapp/assets/ongoing.png").placeholder(R.drawable.progress_animation).into(onGoingProjects)
         onGoingProjects.setOnClickListener {
             val clientArray = target.replace("[", "").replace("]", "").replace("\"", "").split(",")
