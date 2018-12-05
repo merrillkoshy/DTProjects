@@ -89,9 +89,9 @@ class AddNewProjectasAdmin : AppCompatActivity() {
                 val contentURI = data.data
                 try
                 {
-                    val bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, contentURI)
+                    /*val bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, contentURI)
                     val path = saveImage(bitmap)
-                    Log.d("ShowPath",path)
+                    Log.d("ShowPath",path)*/
                     Toast.makeText(this@AddNewProjectasAdmin, "Image Saved!", Toast.LENGTH_SHORT).show()
                     Picasso.get().load(contentURI).fit().placeholder(R.drawable.progress_animation).into(iv)
 
