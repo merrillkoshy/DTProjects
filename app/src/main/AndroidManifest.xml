@@ -48,7 +48,9 @@
         <activity android:name=".UI.OptionsViewerAdapter"
                   android:theme="@style/Theme.Transparent"/>
         <activity android:name=".Admin.EditProjectasAdmin"/>
-        <activity android:name=".Admin.ClientDetails.AddNewProjectasAdmin"/>
+        <activity android:name=".Admin.AddNewProjectasAdmin"/>
+        <activity android:name=".UI.UploadImage"/>
+        <activity android:name=".Admin.ClientDetails.ClientDetailsData"/>
     </application>
 
 

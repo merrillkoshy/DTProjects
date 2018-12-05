@@ -39,6 +39,10 @@
             android:textAllCaps="false"
             android:textColor="#fff"
             android:textSize="20dp" />
+    <ImageView
+            android:id="@+id/iv"
+            android:layout_width="300dp"
+            android:layout_height="300dp"/>
 
     <Button
             android:id="@+id/addactivity"
