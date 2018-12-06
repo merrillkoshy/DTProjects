@@ -40,18 +40,32 @@
         <activity android:name=".EmployeeActivity"/>
         <activity android:name=".LoginScreen"/>
         <activity android:name=".Admin.LoggedInAs"/>
-        <activity android:name=".Admin.OngoingProjects"/>>
-        <activity android:name=".Admin.ClientDetails.ClientDetailActivity"
-                  android:theme="@style/Theme.Transparent"/>
-        <activity android:name=".Admin.AdminMenu"
-                  android:theme="@style/Theme.Transparent"/>
-        <activity android:name=".UI.OptionsViewerAdapter"
-                  android:theme="@style/Theme.Transparent"/>
+        <activity android:name=".Admin.OngoingProjects"/>
+        >
+        <activity
+                android:name=".Admin.ClientDetails.ClientDetailActivity"
+                android:theme="@style/Theme.Transparent"/>
+        <activity
+                android:name=".Admin.AdminMenu"
+                android:theme="@style/Theme.Transparent"/>
+        <activity
+                android:name=".UI.OptionsViewerAdapter"
+                android:theme="@style/Theme.Transparent"/>
         <activity android:name=".Admin.EditProjectasAdmin"/>
         <activity android:name=".Admin.AddNewProjectasAdmin"/>
         <activity android:name=".UI.UploadImage"/>
         <activity android:name=".Admin.ClientDetails.ClientDetailsData"/>
+        <activity android:name=".Admin.BurgerMenu.AddorRemoveUser"/>
+        <activity
+                android:name=".Main2Activity"
+                android:label="@string/title_activity_main2"
+                android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+                android:name=".SettingsActivity"
+                android:label="@string/title_activity_settings">
+        </activity>
+        <activity android:name=".Admin.BurgerMenu.Profile"/>
     </application>
-
 
 </manifest>

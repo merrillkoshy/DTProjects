@@ -11,6 +11,7 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -23,6 +24,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 
+import dot10tech.com.dot10projects.Networking.VolleyMultipartRequest;
 import dot10tech.com.dot10projects.R;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -126,7 +128,7 @@ public class UploadImage extends AppCompatActivity {
         final String tags = editTextTags.getText().toString().trim();
 
         //our custom volley request
-        VolleyMPForImageUpload volleyMultipartRequest = new VolleyMPForImageUpload(Request.Method.POST, EndPoints.UPLOAD_URL,
+        VolleyMultipartRequest volleyMultipartRequest = new VolleyMultipartRequest(Request.Method.POST, EndPoints.UPLOAD_URL,
                 new Response.Listener<NetworkResponse>() {
                     @Override
                     public void onResponse(NetworkResponse response) {
@@ -141,7 +143,8 @@ public class UploadImage extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                        Log.d("errorShown",error.getMessage());
                     }
                 }) {
 

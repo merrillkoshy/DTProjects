@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+         android:layout_width="match_parent"
+        android:background="@drawable/background"
+         android:layout_height="match_parent">
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <ImageView
+                android:id="@+id/mast"
+                android:layout_centerHorizontal="true"
+                android:src="@mipmap/ic_launcher"
+                android:layout_width="150dp"
+                android:layout_height="200dp"/>
+        <TextView
+                android:id="@+id/title"
+                android:layout_below="@+id/mast"
+                android:layout_marginTop="30dp"
+                android:text="ADD / REMOVE USER"
+                android:textColor="#FFF"
+                android:textStyle="normal"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        <EditText
+                android:hint="Add User"
+                android:textColorHint="#FFF"
+                android:textColor="#FFF"
+                android:layout_marginTop="20dp"
+                android:layout_below="@+id/title"
+                android:id="@+id/adduser"
+                android:layout_centerHorizontal="true"
+                android:layout_width="250dp"
+                android:layout_height="?actionBarSize"/>
+
+        <EditText
+                android:hint="Create Password"
+                android:textColorHint="#FFF"
+                android:textColor="#FFF"
+                android:layout_marginTop="10dp"
+                android:layout_below="@+id/adduser"
+                android:id="@+id/addpass"
+                android:layout_centerHorizontal="true"
+                android:layout_width="250dp"
+                android:layout_height="?actionBarSize"/>
+        <TextView
+                android:layout_below="@+id/addpass"
+                android:layout_marginTop="10dp"
+                android:layout_centerHorizontal="true"
+                android:text="Add Category:"
+                android:gravity="center"
+                android:textColor="#FFF"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        <Spinner
+                android:id="@+id/categoryspinner"
+                android:layout_width="250dp"
+                android:spinnerMode="dropdown"
+                android:entries="@array/category"
+                android:backgroundTint="#FFF"
+                style="@style/Widget.AppCompat.Light.DropDownItem.Spinner"
+                android:gravity="center"
+                android:layout_marginTop="25dp"
+                android:layout_below="@+id/addpass"
+                android:layout_centerHorizontal="true"
+                android:layout_height="?actionBarSize"/>
+
+        <ImageView
+                android:id="@+id/adduserbtn"
+                android:layout_below="@id/categoryspinner"
+                android:layout_centerHorizontal="true"
+                android:src="@mipmap/ic_launcher"
+                android:layout_width="100dp"
+                android:layout_height="130dp"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -109,44 +109,6 @@ class AddNewProjectasAdmin : AppCompatActivity() {
 
 
 
-
-    fun saveImage(myBitmap: Bitmap):String {
-        val bytes = ByteArrayOutputStream()
-        myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes)
-        val wallpaperDirectory = File(
-            (Environment.getExternalStorageDirectory()).toString() + IMAGE_DIRECTORY
-        )
-        // have the object build the directory structure, if needed.
-        Log.d("fee",wallpaperDirectory.toString())
-        if (!wallpaperDirectory.exists())
-        {
-
-            wallpaperDirectory.mkdirs()
-        }
-
-        try
-        {
-            Log.d("heel",wallpaperDirectory.toString())
-            val f = File(wallpaperDirectory, ((Calendar.getInstance()
-                .getTimeInMillis()).toString() + ".jpg"))
-            f.createNewFile()
-            val fo = FileOutputStream(f)
-            fo.write(bytes.toByteArray())
-            MediaScannerConnection.scanFile(this,
-                arrayOf(f.getPath()),
-                arrayOf("image/jpeg"), null)
-            fo.close()
-            Log.d("TAG", "File Saved::--->" + f.getAbsolutePath())
-
-            return f.getAbsolutePath()
-        }
-        catch (e1: IOException) {
-            e1.printStackTrace()
-        }
-
-        return ""
-    }
-
  /*   private fun addActivity() {
         val getClientName = activity?.text.toString()
         val stringRequest = object : StringRequest(Request.Method.POST,addUrl, Response.Listener<String>{
