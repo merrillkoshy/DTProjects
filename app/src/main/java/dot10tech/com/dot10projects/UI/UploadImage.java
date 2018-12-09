@@ -144,7 +144,6 @@ public class UploadImage extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
-                        Log.d("errorShown",error.getMessage());
                     }
                 }) {
 

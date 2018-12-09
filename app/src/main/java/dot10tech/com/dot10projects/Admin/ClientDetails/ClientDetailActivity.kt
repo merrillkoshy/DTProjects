@@ -42,20 +42,28 @@ class ClientDetailActivity:AppCompatActivity(), GestureDetector.OnGestureListene
             .fit().
                 placeholder(R.drawable.progress_animation).
                 into(clientLogo)
+
+        val startDate=intent.getStringExtra("sd").replace("\\","")
+        val deadline=intent.getStringExtra("dl").replace("\\","")
+
+        val latestactivity=intent.getStringExtra("la")
+        val taskdeadline=intent.getStringExtra("td").replace("\\","")
+        val taskstatus=intent.getStringExtra("ts").replace("\\t","")
+
+
         clientNameTitle.text="CLIENT"
         clientName.text=intent.getStringExtra("cN")
-        val startDate="1/1/18"
-        val endDate="1/1/18"
-        dates.text="Start Date : "+startDate+"\n\n"+"Project Deadline : "+endDate
+
+        dates.text="Start Date : "+startDate+"\n\n"+"Project Deadline : "+deadline
         progress()
 
-        val latestactivity="Light Box Installation"
+
         latestActivity.text=" "+latestactivity
 
-        val deadlineforLatestActivity="1/1/18"
-        taskDeadline.text=" "+deadlineforLatestActivity
 
-        val taskstatus="Completed"
+        taskDeadline.text=" "+taskdeadline
+
+
         taskStatus.text=" "+taskstatus
 
         this.gDetector = GestureDetectorCompat(this, this)
@@ -96,7 +104,7 @@ class ClientDetailActivity:AppCompatActivity(), GestureDetector.OnGestureListene
     }
 
     fun progress() {
-        val progressVal=50
+        val progressVal=intent.getStringExtra("op").toInt()
         opPercentage.text=""+progressVal+" %"
         if(progressVal==100){
             progressBar.progress=progressVal
