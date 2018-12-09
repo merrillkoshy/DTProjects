@@ -49,7 +49,7 @@ class EditClientDetail:AppCompatActivity(){
         deadline_et.hint=deadline.replace("\\","")
         deadline_et.setHintTextColor(resources.getColor(R.color.unchanged))
 
-        op_et.hint=overallprogress
+        op_et.hint=overallprogress.toString()
         op_et.setHintTextColor(resources.getColor(R.color.unchanged))
 
         la_et.hint=latestactivity
@@ -58,6 +58,7 @@ class EditClientDetail:AppCompatActivity(){
         td_et.hint=taskdeadline.replace("\\","")
         td_et.setHintTextColor(resources.getColor(R.color.unchanged))
 
+        ts_et.setTextColor(resources.getColor(R.color.white))
         ts_et.hint=taskstatus
         ts_et.setHintTextColor(resources.getColor(R.color.unchanged))
 
@@ -148,6 +149,7 @@ class EditClientDetail:AppCompatActivity(){
                @Throws(AuthFailureError::class)
                override fun getParams(): Map<String, String> {
                    val params = HashMap<String, String>()
+
                    params.put("clientname", getClientName)
                    params.put("oldclientname", intent.getStringExtra("cN"))
 

@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.view.GestureDetectorCompat
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.GestureDetector
 import com.squareup.picasso.Picasso
 import dot10tech.com.dot10projects.R
@@ -38,7 +39,7 @@ class ClientDetailActivity:AppCompatActivity(), GestureDetector.OnGestureListene
         setContentView(R.layout.activity_clientdetail)
 
         Picasso.get().
-            load(intent.getStringExtra("cL"))
+            load(intent.getStringExtra("ciU"))
             .fit().
                 placeholder(R.drawable.progress_animation).
                 into(clientLogo)
@@ -104,6 +105,7 @@ class ClientDetailActivity:AppCompatActivity(), GestureDetector.OnGestureListene
     }
 
     fun progress() {
+
         val progressVal=intent.getStringExtra("op").toInt()
         opPercentage.text=""+progressVal+" %"
         if(progressVal==100){

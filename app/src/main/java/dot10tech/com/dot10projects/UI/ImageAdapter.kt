@@ -106,44 +106,50 @@ class ImageAdapter(
                     while (i < size) {
                         val un = ProjectArray[i]
                         clientName.add(un)
-                        i += 2
+                        i += 7
 
                     }
                     while (k < size) {
                         val pw = ProjectArray[k]
                         startDate.add(pw)
-                        k += 2
+                        k += 7
                     }
                     while (l < size) {
                         val pw = ProjectArray[l]
                         deadline.add(pw)
-                        l += 2
+                        l += 7
                     }
                     while (m < size) {
+
                         val pw = ProjectArray[m]
                         overallprogress.add(pw)
-                        m += 2
+                        m += 7
                     }
                     while (o < size) {
                         val pw = ProjectArray[o]
                         latestactivity.add(pw)
-                        o += 2
+                        o += 7
                     }
                     while (p < size) {
                         val pw = ProjectArray[p]
                         taskdeadline.add(pw)
-                        p += 2
+                        p += 7
                     }
                     while (q < size) {
                         val pw = ProjectArray[q]
                         taskstatus.add(pw)
-                        q += 2
+                        q += 7
                     }
 
                     var n=0
                     while(n<clientName.size)
-                    {   if(clientName[n]==client)
-                        flag=n
+                    {
+                        Log.d(clientList[n],client)
+                        if(clientList[n].toString().trim()==client.toString().trim())
+                        {
+                            flag=n
+                            break
+                        }
                         n++
                     }
 
@@ -182,43 +188,43 @@ class ImageAdapter(
                     while (i < size) {
                         val un = ProjectArray[i]
                         clientName.add(un)
-                        i += 2
+                        i += 7
 
                     }
                     while (k < size) {
                         val pw = ProjectArray[k]
                         startDate.add(pw)
-                        k += 2
+                        k += 7
                     }
                     while (l < size) {
                         val pw = ProjectArray[l]
                         deadline.add(pw)
-                        l += 2
+                        l += 7
                     }
                     while (m < size) {
                         val pw = ProjectArray[m]
                         overallprogress.add(pw)
-                        m += 2
+                        m += 7
                     }
                     while (o < size) {
                         val pw = ProjectArray[o]
                         latestactivity.add(pw)
-                        o += 2
+                        o += 7
                     }
                     while (p < size) {
                         val pw = ProjectArray[p]
                         taskdeadline.add(pw)
-                        p += 2
+                        p += 7
                     }
                     while (q < size) {
                         val pw = ProjectArray[q]
                         taskstatus.add(pw)
-                        q += 2
+                        q += 7
                     }
 
                     var n=0
                     while(n<clientName.size)
-                    {   if(clientName[n]==client)
+                    {   if(clientList[n]==client)
                         flag=n
                         n++
                     }
