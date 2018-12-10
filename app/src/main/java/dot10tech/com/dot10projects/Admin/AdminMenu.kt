@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.view.GestureDetectorCompat
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
 import com.squareup.picasso.Picasso
@@ -38,6 +39,13 @@ class AdminMenu:AppCompatActivity(), GestureDetector.OnGestureListener{
 
         teamassignmentIcon.setOnClickListener {
             val ta_intent=Intent(this,OptionsViewerAdapter::class.java)
+
+
+            ta_intent.putStringArrayListExtra("staffName",intent.getStringArrayListExtra("staffName"))
+            ta_intent.putStringArrayListExtra("staffAssignment",intent.getStringArrayListExtra("staffAssignment"))
+            ta_intent.putStringArrayListExtra("staffAffiliation",intent.getStringArrayListExtra("staffAffiliation"))
+
+
             ta_intent.putExtra("clientName",intent.getStringExtra("cN"))
             startActivity(ta_intent)
             overridePendingTransition(R.anim.animation_leave, R.anim.animation_enter)

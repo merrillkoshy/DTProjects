@@ -67,6 +67,7 @@
         </activity>
         <activity android:name=".Admin.BurgerMenu.Profile"/>
         <activity android:name=".Admin.ClientDetails.EditClientDetail"/>
+        <activity android:name=".Employee.EditTeamActivity"/>
     </application>
 
 </manifest>

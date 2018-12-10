@@ -17,8 +17,8 @@ import android.widget.RelativeLayout
 import dot10tech.com.dot10projects.Admin.AdminMenu
 import kotlinx.android.synthetic.main.admin_menu.*
 import dot10tech.com.dot10projects.MainActivity
-
-
+import okhttp3.*
+import java.io.IOException
 
 
 class ClientDetailActivity:AppCompatActivity(), GestureDetector.OnGestureListener {
@@ -34,6 +34,8 @@ class ClientDetailActivity:AppCompatActivity(), GestureDetector.OnGestureListene
         //calling the superclass implementation
         return super.onTouchEvent(event)
     }
+
+
 
     fun initialiseWidgets(){
         setContentView(R.layout.activity_clientdetail)
@@ -85,7 +87,14 @@ class ClientDetailActivity:AppCompatActivity(), GestureDetector.OnGestureListene
 
     override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
         if (e2!!.getX() - e1!!.getX() > 50) {
+
+
+
             val a_intent=Intent(this,AdminMenu::class.java)
+            a_intent.putStringArrayListExtra("staffName",intent.getStringArrayListExtra("staffName"))
+            a_intent.putStringArrayListExtra("staffAssignment",intent.getStringArrayListExtra("staffAssignment"))
+            a_intent.putStringArrayListExtra("staffAffiliation",intent.getStringArrayListExtra("staffAffiliation"))
+
             a_intent.putExtra("cN",intent.getStringExtra("cN"))
             startActivity(a_intent)
             this.overridePendingTransition(R.anim.menu_drawer_close,R.anim.menu_drawer_open)

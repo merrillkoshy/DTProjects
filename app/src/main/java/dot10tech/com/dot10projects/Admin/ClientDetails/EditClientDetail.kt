@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import com.android.volley.AuthFailureError
@@ -20,6 +21,12 @@ import kotlinx.android.synthetic.main.activity_editclientdetail.*
 import org.json.JSONException
 import org.json.JSONObject
 
+import android.view.ViewGroup
+import android.view.ViewParent
+import kotlinx.android.synthetic.main.activity_editteam.*
+import kotlinx.android.synthetic.main.project_frag.*
+
+
 class EditClientDetail:AppCompatActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,7 +34,7 @@ class EditClientDetail:AppCompatActivity(){
 
         setContentView(R.layout.activity_editclientdetail)
 
-        val stats = arrayOf("-- Select Status --", "Ongoing", "Completed")
+
 
         val startDate=intent.getStringExtra("sd")
         val deadline=intent.getStringExtra("dl")
@@ -38,6 +45,16 @@ class EditClientDetail:AppCompatActivity(){
 
         getSupportActionBar()?.setDisplayHomeAsUpEnabled(true)
         getSupportActionBar()?.setDisplayShowHomeEnabled(true)
+
+        // remove your listview
+        val yourListView: View = findViewById(R.id.swap)
+        val parent = yourListView.getParent() as ViewGroup
+        parent.removeView(yourListView)
+    // inflate your profile view (or get the reference to it if it's already inflated)
+        val yourProfileView = layoutInflater.inflate(R.layout.project_frag, parent, false)
+    // add it to the parent
+        parent.addView(yourProfileView)
+
 
         clientname_et.setTextColor(resources.getColor(R.color.white))
         clientname_et.hint=intent.getStringExtra("cN")
@@ -59,7 +76,7 @@ class EditClientDetail:AppCompatActivity(){
         td_et.setHintTextColor(resources.getColor(R.color.unchanged))
 
         ts_et.setTextColor(resources.getColor(R.color.white))
-        ts_et.hint=taskstatus
+        ts_et.hint=taskstatus.replace("\\t","")
         ts_et.setHintTextColor(resources.getColor(R.color.unchanged))
 
 
@@ -70,10 +87,27 @@ class EditClientDetail:AppCompatActivity(){
             fit().
             placeholder(R.drawable.progress_animation).
             into(mast)
-
+        optiontabs()
         updatebtn.setOnClickListener { addActivity() }
     }
 
+    fun optiontabs(){
+
+        editTeamTab.setOnClickListener {
+            val parent = swap.getParent() as? ViewGroup
+            parent!!.removeView(swap)
+            val teamview = layoutInflater.inflate(R.layout.activity_editteam, parent, false)
+            parent.addView(teamview)
+        }
+        editProjectTab.setOnClickListener {
+            val parent = swap.getParent() as? ViewGroup
+            parent!!.removeView(swap)
+            val teamview = layoutInflater.inflate(R.layout.project_frag, parent, false)
+            parent.addView(teamview)
+        }
+
+
+    }
     override fun onSupportNavigateUp(): Boolean {
         val intent= Intent(this,MainActivity::class.java)
         startActivity(intent)

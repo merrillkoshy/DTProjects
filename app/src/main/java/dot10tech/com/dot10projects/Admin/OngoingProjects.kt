@@ -7,11 +7,17 @@ import android.util.Log
 import dot10tech.com.dot10projects.R
 import dot10tech.com.dot10projects.UI.ImageAdapter
 import dot10tech.com.dot10projects.UI.IndefinitePagerIndicator
+import okhttp3.*
+import java.io.IOException
 
 class OngoingProjects:AppCompatActivity(){
     private lateinit var pagerAdapter: ImageAdapter
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         initialiseWidgets()
     }
 

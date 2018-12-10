@@ -15,6 +15,7 @@ import java.util.ArrayList
 import android.app.Activity
 import dot10tech.com.dot10projects.Admin.ClientDetails.ClientDetailActivity
 import dot10tech.com.dot10projects.Admin.ClientDetails.EditClientDetail
+import dot10tech.com.dot10projects.Employee.EmployeeDetails
 import dot10tech.com.dot10projects.SplashActivity
 import okhttp3.*
 import java.io.IOException
@@ -38,11 +39,39 @@ class ImageAdapter(
     val latestactivity = ArrayList<String>()
     val taskdeadline = ArrayList<String>()
     val taskstatus = ArrayList<String>()
+
+    private var targetEmp = String()
+    val staffName = ArrayList<String>()
+    val staffAssignment = ArrayList<String>()
+    val workingProject = ArrayList<String>()
+    val affiliation = ArrayList<String>()
+
     var flag=0
 
     override fun getCount(): Int {
 
         return imageList.size
+    }
+
+    fun fetchJsonEmp(){
+        val url = "https://dot10tech.com/mobileapp/scripts/teamAssignmentView.php"
+
+        val client = OkHttpClient()
+        val request = Request.Builder().url(url).build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onResponse(call: Call, response: Response) {
+                val body = response.body()?.string()
+
+                //Slicing the response
+                targetEmp = body.toString()
+
+            }
+
+            override fun onFailure(call: Call, e: IOException) {
+                println("Failed to execute request")
+            }
+        })
     }
 
     fun fetchJson(){
@@ -75,6 +104,7 @@ class ImageAdapter(
         val imageUrl = imageList[position]
         val client=clientList[position]
         fetchJson()
+        fetchJsonEmp()
 
         if(imageUrl=="NULL")
         {
@@ -153,8 +183,79 @@ class ImageAdapter(
                         n++
                     }
 
+
+
+
+
+                    val clientArray = targetEmp.replace("[", "").replace("]", "").replace("\"", "").split(",")
+
+                    var a = 0
+                    var b = 1
+                    var c = 2
+                    var d = 3
+
+                    Log.d("size", "" + clientArray.size)
+                    val arrsize = clientArray.size
+                    while (a < arrsize) {
+                        val un = clientArray[a]
+                        staffName.add(un)
+                        a += 4
+
+                    }
+                    while (b < arrsize) {
+                        val pw = clientArray[b]
+                        staffAssignment.add(pw)
+                        b += 4
+                    }
+                    while (c < arrsize) {
+                        val pw = clientArray[c]
+                        Log.d("workingproject",pw)
+                        workingProject.add(pw)
+                        c += 4
+                    }
+                    while (d < arrsize) {
+                        val pw = clientArray[d]
+                        affiliation.add(pw)
+                        d += 4
+                    }
+
+                    var e=0
+                    val indexlist=ArrayList<String>()
+
+                    while(e<workingProject.size)
+                    {
+                        if(workingProject[e]==client)
+                        {
+                            indexlist.add(e.toString())
+                        }
+                        e++
+                    }
+
+                    var f=0
+
+                    val staffnameforExport=ArrayList<String>()
+                    val staffassignmentforExport=ArrayList<String>()
+                    val staffaffiliationforExport=ArrayList<String>()
+
+                    while (f<indexlist.size)
+                    {
+                        staffnameforExport.add(staffName[indexlist[f].toInt()])
+                        staffassignmentforExport.add(staffAssignment[indexlist[f].toInt()])
+                        staffaffiliationforExport.add(affiliation[indexlist[f].toInt()])
+                        f++
+                    }
+
+
+
                     pagerImageView.startAnimation(animateOnSelect)
                     val intent= Intent(mContext, ClientDetailActivity::class.java )
+
+                    EmployeeDetails(staffnameforExport,staffassignmentforExport,staffaffiliationforExport)
+
+                    intent.putStringArrayListExtra("staffName",staffnameforExport)
+                    intent.putStringArrayListExtra("staffAssignment",staffassignmentforExport)
+                    intent.putStringArrayListExtra("staffAffiliation",staffaffiliationforExport)
+
                     intent.putExtra("ciU", imageUrl)
                     intent.putExtra("cN",clientName[flag])
                     intent.putExtra("sd",startDate[flag])
