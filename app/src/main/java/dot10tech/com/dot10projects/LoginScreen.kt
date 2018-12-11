@@ -24,6 +24,7 @@ class LoginScreen:AppCompatActivity(){
         Picasso.get().load("https://dot10tech.com/mobileApp/assets/loginbtn.png").placeholder(R.drawable.progress_animation).into(login)
 
         val adminUsernameFromDB=intent.getStringArrayListExtra("usernames")
+        val usercategory=intent.getStringArrayListExtra("category")
         val adminPasswordFromDB=intent.getStringArrayListExtra("passwords")
         val profilePicFromDB=intent.getStringArrayListExtra("profilePic")
         val firstNameFromDB=intent.getStringArrayListExtra("firstName")
@@ -46,8 +47,40 @@ class LoginScreen:AppCompatActivity(){
                 }
                 }
             1->{login.setOnClickListener {
-                if (username.text.toString() == "test" && password.text.toString() == "test") {
-                    startActivity(employeeintent)
+                val size=adminUsernameFromDB.size
+                var i=0
+                var match="fail"
+                var pos=0
+                var getP=""
+
+                while(i<size)
+                {
+
+                    if (adminUsernameFromDB[i].trim()==username.text.trim().toString())
+                    {
+                        match="pass"
+                        pos=i
+                        getP=adminPasswordFromDB[i]
+                        break
+                    }
+                    i++
+                }
+                if(getP==password.text.trim().toString())
+                    match+="pass"
+                Log.d("match",match)
+                if (match=="passpass") {
+                    val category=usercategory[pos]
+
+
+                    if(category!=null) {
+                        employeeintent.putExtra("category", category)
+
+                        startActivity(employeeintent)
+                    }
+                    else{
+                        Log.d("category","stillNULL")
+                    }
+
                 }
             }
 

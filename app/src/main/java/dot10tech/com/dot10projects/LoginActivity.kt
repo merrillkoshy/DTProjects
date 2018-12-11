@@ -13,10 +13,11 @@ import java.io.IOException
 class LoginActivity:AppCompatActivity(){
 
     private var credsTarget = String()
-
+    private var usercredsTarget= String()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        fetchJson_UserCredTable()
         fetchJson_CredTable()
         initializewidgets()
     }
@@ -42,6 +43,27 @@ class LoginActivity:AppCompatActivity(){
         })
     }
 
+    fun fetchJson_UserCredTable() {
+        val url = "https://dot10tech.com/mobileapp/scripts/teamscripts/userLoginactivity.php"
+
+        val client = OkHttpClient()
+        val request = Request.Builder().url(url).build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onResponse(call: Call, response: Response) {
+                val body = response.body()?.string()
+
+                //Slicing the response
+                usercredsTarget = body.toString()
+
+            }
+
+            override fun onFailure(call: Call, e: IOException) {
+                println("Failed to execute request")
+            }
+        })
+    }
+
     fun initializewidgets(){
         setContentView(R.layout.activity_login)
 
@@ -54,7 +76,41 @@ class LoginActivity:AppCompatActivity(){
             startActivity(intent)
         }
         employee.setOnClickListener {
+            val credsArray = usercredsTarget.replace("[", "").replace("]", "").replace("\"", "").split(",")
+            val usernames = ArrayList<String>()
+            val passwords = ArrayList<String>()
+            val category = ArrayList<String>()
+
+
+            var i = 0
+            var j = 2
+            var k = 1
+
+
+            Log.d("size", "" + credsArray.size)
+            val size = credsArray.size
+            while (i < size) {
+                val un = credsArray[i]
+                usernames.add(un)
+                i += 3
+
+            }
+            while (k < size) {
+                val pw = credsArray[k]
+                passwords.add(pw)
+                k += 3
+            }
+            while (j < size) {
+                val pw = credsArray[j]
+                category.add(pw)
+                j += 3
+            }
+
+
             val intent=Intent(this,LoginScreen::class.java)
+            intent.putExtra("usernames", usernames)
+            intent.putExtra("passwords", passwords)
+            intent.putExtra("category", category)
             intent.putExtra("flag",1)
             startActivity(intent)
         }

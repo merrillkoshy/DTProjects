@@ -2,6 +2,7 @@ package dot10tech.com.dot10projects.Admin.BurgerMenu
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -19,17 +20,11 @@ import kotlinx.android.synthetic.main.activity_addorremoveuser.*
 import org.json.JSONException
 import org.json.JSONObject
 
-class AddorRemoveUser:AppCompatActivity(),AdapterView.OnItemSelectedListener{
+class AddorRemoveUser:AppCompatActivity(){
 
     var selected_cat= String()
 
-    override fun onNothingSelected(p0: AdapterView<*>?) {
 
-    }
-
-    override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-        selected_cat=resources.getStringArray(R.array.category)[p2]
-    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,7 +42,7 @@ class AddorRemoveUser:AppCompatActivity(),AdapterView.OnItemSelectedListener{
             placeholder(R.drawable.progress_animation).
             into(mast)
 
-        categoryspinner.onItemSelectedListener
+
 
         ArrayAdapter(this, R.layout.spinner_item, resources.getStringArray(R.array.category))
 
@@ -57,6 +52,21 @@ class AddorRemoveUser:AppCompatActivity(),AdapterView.OnItemSelectedListener{
             fit().
             placeholder(R.drawable.progress_animation).
             into(adduserbtn)
+
+        categoryspinner.onItemSelectedListener= object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                Toast.makeText(this@AddorRemoveUser, resources.getStringArray(R.array.category)[p2], Toast.LENGTH_LONG).show()
+                selected_cat=resources.getStringArray(R.array.category)[p2]
+
+            }
+
+        }
+
+        adduserbtn.setOnClickListener { addActivity() }
     }
 
        private fun addActivity() {
