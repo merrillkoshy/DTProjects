@@ -1,6 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:background="@drawable/background"
+        android:layout_height="match_parent">
+
 <LinearLayout
-        android:id="@+id/editframe"
+        android:id="@+id/masthead"
+        android:gravity="center"
+        android:layout_marginTop="30dp"
+        android:layout_gravity="center"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <ImageView
+            android:id="@+id/teammast"
+            android:src="@mipmap/ic_launcher"
+
+
+            android:layout_width="150dp"
+            android:layout_height="200dp"/>
+    <LinearLayout
+            android:layout_marginStart="50dp"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        <TextView
+                android:background="@drawable/progressbg"
+                android:id="@+id/teameditProjectTab"
+                android:layout_width="150dp"
+                android:padding="10dp"
+                android:gravity="center"
+                android:textColor="#FFF"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:text="Edit Project"
+                android:layout_height="40dp"/>
+        <TextView
+                android:background="@color/selected_dot_color"
+                android:id="@+id/teameditTeamTab"
+                android:layout_width="150dp"
+                android:padding="10dp"
+                android:gravity="center"
+                android:textColor="#FFF"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:text="Edit Team"
+                android:layout_height="40dp"/>
+
+    </LinearLayout>
+</LinearLayout>
+
+<LinearLayout
+        android:layout_below="@+id/masthead"
         android:orientation="vertical"
+        android:background="@drawable/background"
         android:layout_width="match_parent" android:layout_height="match_parent"
         xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -16,7 +69,29 @@
                 android:gravity="center"
                 android:textColor="#FFF"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:text="Client Name"
+                android:text="Select Staff to edit: "
+                android:layout_height="match_parent"/>
+        <Spinner
+                android:id="@+id/staffselectionspinner"
+                android:layout_marginStart="20dp"
+                android:layout_width="match_parent"
+                android:hint="staff_name"
+                android:layout_height="?actionBarSize"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <TextView
+                android:layout_marginStart="30dp"
+                android:layout_width="wrap_content"
+                android:gravity="center"
+                android:textColor="#FFF"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:text="Staff Name"
                 android:layout_height="match_parent"/>
         <EditText
                 android:id="@+id/staff_name"
@@ -39,7 +114,7 @@
                 android:gravity="center"
                 android:textColor="#FFF"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:text="Start Date"
+                android:text="Staff Assignment"
                 android:layout_height="match_parent"/>
         <EditText
                 android:id="@+id/staff_assignment"
@@ -62,7 +137,7 @@
                 android:gravity="center"
                 android:textColor="#FFF"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:text="Project Deadline"
+                android:text="Staff Affiliation"
                 android:layout_height="match_parent"/>
         <EditText
                 android:id="@+id/staff_affiliation"
@@ -74,6 +149,17 @@
 
 
     </LinearLayout>
-
+    <TextView
+            android:id="@+id/teamupdatebtn"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/background"
+            android:textColor="#FFF"
+            android:text="UPDATE"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:layout_gravity="center"
+            android:layout_width="200dp"
+            android:layout_height="?actionBarSize"/>
 
 </LinearLayout>
+</RelativeLayout>

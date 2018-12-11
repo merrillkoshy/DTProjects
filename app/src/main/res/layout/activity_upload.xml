@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/activity_main"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:background="@drawable/background">
+    <ImageView
+            android:id="@+id/mast"
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"
+            android:layout_width="150dp"
+            android:src="@mipmap/ic_launcher"
+            android:layout_height="200dp"/>
+
+    <EditText
+
+            android:layout_marginTop="30dp"
+            android:hint="Client Name"
+            android:id="@+id/client_name"
+            android:layout_below="@+id/mast"
+            android:layout_width="250dp"
+            android:layout_centerHorizontal="true"
+              android:layout_height="?actionBarSize"/>
+    <Button
+            android:layout_below="@+id/client_name"
+            android:id="@+id/select_image"
+            android:layout_marginTop="10dp"
+            android:layout_width="250dp"
+            android:layout_centerHorizontal="true"
+            android:layout_height="?actionBarSize"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:text="@string/upload_logo"
+            android:layout_centerVertical="true"
+            android:background="@drawable/progressbg"/>
+
+    <Button
+            android:visibility="gone"
+            android:layout_below="@+id/select_image"
+            android:id="@+id/nextpage"
+            android:layout_marginTop="50dp"
+            android:layout_width="250dp"
+            android:layout_centerHorizontal="true"
+            android:layout_height="?actionBarSize"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:text="@string/proceed"
+            android:layout_centerVertical="true"
+            android:background="@color/selected_dot_color"/>
+
+
+</RelativeLayout>

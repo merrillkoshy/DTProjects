@@ -53,7 +53,6 @@
                 android:theme="@style/Theme.Transparent"/>
         <activity android:name=".Admin.EditProjectasAdmin"/>
         <activity android:name=".Admin.AddNewProjectasAdmin"/>
-        <activity android:name=".UI.UploadImage"/>
         <activity android:name=".Admin.ClientDetails.ClientDetailsData"/>
         <activity android:name=".Admin.BurgerMenu.AddorRemoveUser"/>
         <activity
@@ -68,6 +67,8 @@
         <activity android:name=".Admin.BurgerMenu.Profile"/>
         <activity android:name=".Admin.ClientDetails.EditClientDetail"/>
         <activity android:name=".Employee.EditTeamActivity"/>
+        <activity android:name=".UI.UploadActivity"/>
+        <activity android:name=".Admin.ClientDetails.AddNewProjectDetails"/>
     </application>
 
 </manifest>

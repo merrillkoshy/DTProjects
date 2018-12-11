@@ -23,17 +23,27 @@ import org.json.JSONObject
 
 import android.view.ViewGroup
 import android.view.ViewParent
+import dot10tech.com.dot10projects.Employee.EditTeamActivity
 import kotlinx.android.synthetic.main.activity_editteam.*
-import kotlinx.android.synthetic.main.project_frag.*
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.OkHttpClient
+import java.io.IOException
+import java.util.ArrayList
 
 
 class EditClientDetail:AppCompatActivity(){
+
+    private var targetEmp = String()
+    val staffName = ArrayList<String>()
+    val staffAssignment = ArrayList<String>()
+    val workingProject = ArrayList<String>()
+    val affiliation = ArrayList<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_editclientdetail)
-
 
 
         val startDate=intent.getStringExtra("sd")
@@ -46,14 +56,6 @@ class EditClientDetail:AppCompatActivity(){
         getSupportActionBar()?.setDisplayHomeAsUpEnabled(true)
         getSupportActionBar()?.setDisplayShowHomeEnabled(true)
 
-        // remove your listview
-        val yourListView: View = findViewById(R.id.swap)
-        val parent = yourListView.getParent() as ViewGroup
-        parent.removeView(yourListView)
-    // inflate your profile view (or get the reference to it if it's already inflated)
-        val yourProfileView = layoutInflater.inflate(R.layout.project_frag, parent, false)
-    // add it to the parent
-        parent.addView(yourProfileView)
 
 
         clientname_et.setTextColor(resources.getColor(R.color.white))
@@ -80,7 +82,7 @@ class EditClientDetail:AppCompatActivity(){
         ts_et.setHintTextColor(resources.getColor(R.color.unchanged))
 
 
-
+        fetchJsonEmp()
         Picasso.
             get().
             load("https:dot10tech.com/mobileApp/assets/appicon.png").
@@ -92,22 +94,98 @@ class EditClientDetail:AppCompatActivity(){
     }
 
     fun optiontabs(){
+        val clientArray = targetEmp.replace("[", "").replace("]", "").replace("\"", "").split(",")
+
+        var a = 0
+        var b = 1
+        var c = 2
+        var d = 3
+
+        Log.d("size", "" + clientArray.size)
+        val arrsize = clientArray.size
+        while (a < arrsize) {
+            val un = clientArray[a]
+            staffName.add(un)
+            a += 4
+
+        }
+        while (b < arrsize) {
+            val pw = clientArray[b]
+            staffAssignment.add(pw)
+            b += 4
+        }
+        while (c < arrsize) {
+            val pw = clientArray[c]
+            Log.d("workingproject",pw)
+            workingProject.add(pw)
+            c += 4
+        }
+        while (d < arrsize) {
+            val pw = clientArray[d]
+            affiliation.add(pw)
+            d += 4
+        }
+
+        var e=0
+        val indexlist= ArrayList<String>()
+
+        while(e<workingProject.size)
+        {
+            if(workingProject[e]==intent.getStringExtra("cN"))
+            {
+                indexlist.add(e.toString())
+            }
+            e++
+        }
+
+        var f=0
+
+        val staffnameforExport= ArrayList<String>()
+        val staffassignmentforExport= ArrayList<String>()
+        val staffaffiliationforExport= ArrayList<String>()
+
+        while (f<indexlist.size)
+        {
+            staffnameforExport.add(staffName[indexlist[f].toInt()])
+            staffassignmentforExport.add(staffAssignment[indexlist[f].toInt()])
+            staffaffiliationforExport.add(affiliation[indexlist[f].toInt()])
+            f++
+        }
 
         editTeamTab.setOnClickListener {
-            val parent = swap.getParent() as? ViewGroup
-            parent!!.removeView(swap)
-            val teamview = layoutInflater.inflate(R.layout.activity_editteam, parent, false)
-            parent.addView(teamview)
-        }
-        editProjectTab.setOnClickListener {
-            val parent = swap.getParent() as? ViewGroup
-            parent!!.removeView(swap)
-            val teamview = layoutInflater.inflate(R.layout.project_frag, parent, false)
-            parent.addView(teamview)
+
+            val intent:Intent= Intent(this,EditTeamActivity::class.java)
+            intent.putStringArrayListExtra("staffName",staffnameforExport)
+            intent.putStringArrayListExtra("staffAssignment",staffassignmentforExport)
+            intent.putStringArrayListExtra("staffAffiliation",staffaffiliationforExport)
+            startActivity(intent)
+
         }
 
 
     }
+
+    fun fetchJsonEmp(){
+        val url = "https://dot10tech.com/mobileapp/scripts/teamAssignmentView.php"
+
+        val client = OkHttpClient()
+        val request = okhttp3.Request.Builder().url(url).build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onResponse(call: Call, response: okhttp3.Response) {
+                val body = response.body()?.string()
+
+                //Slicing the response
+                targetEmp = body.toString()
+
+            }
+
+            override fun onFailure(call: Call, e: IOException) {
+                println("Failed to execute request")
+            }
+        })
+    }
+
     override fun onSupportNavigateUp(): Boolean {
         val intent= Intent(this,MainActivity::class.java)
         startActivity(intent)
