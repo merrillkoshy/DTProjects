@@ -6,8 +6,6 @@ import android.support.v4.view.ViewPager
 import dot10tech.com.dot10projects.R
 import dot10tech.com.dot10projects.UI.ImageAdapter
 import dot10tech.com.dot10projects.UI.IndefinitePagerIndicator
-import okhttp3.*
-import java.io.IOException
 
 class EditProjectasAdmin : AppCompatActivity() {
     private lateinit var pagerAdapter: ImageAdapter
@@ -28,7 +26,7 @@ class EditProjectasAdmin : AppCompatActivity() {
         setContentView(R.layout.activity_editasadmin)
         val viewPagr: ViewPager =findViewById(R.id.inside_pager)
         val indicator: IndefinitePagerIndicator =findViewById(R.id.pager_indicator)
-        pagerAdapter= ImageAdapter(this,clientImageUrls,clientNames,"edit")
+        pagerAdapter= ImageAdapter(this, clientImageUrls, clientNames, "edit", "")
         viewPagr.adapter = pagerAdapter
         indicator.attachToViewPager(viewPagr)
 

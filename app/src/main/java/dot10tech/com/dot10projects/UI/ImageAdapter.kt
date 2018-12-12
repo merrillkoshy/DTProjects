@@ -15,8 +15,8 @@ import java.util.ArrayList
 import android.app.Activity
 import dot10tech.com.dot10projects.Admin.ClientDetails.ClientDetailActivity
 import dot10tech.com.dot10projects.Admin.ClientDetails.EditClientDetail
+import dot10tech.com.dot10projects.Employee.EmployeeDashboard
 import dot10tech.com.dot10projects.Employee.EmployeeDetails
-import dot10tech.com.dot10projects.SplashActivity
 import okhttp3.*
 import java.io.IOException
 
@@ -25,7 +25,8 @@ class ImageAdapter(
     private val mContext: Context,
     private val imageList: ArrayList<String>,
     private val clientList: ArrayList<String>,
-    private val intention: String
+    private val intention: String,
+    private val username: String
 ) : PagerAdapter() {
 
     private val TAG = this.javaClass.simpleName
@@ -257,6 +258,84 @@ class ImageAdapter(
                     intent.putStringArrayListExtra("staffAffiliation",staffaffiliationforExport)
 
                     intent.putExtra("ciU", imageUrl)
+                    intent.putExtra("cN",clientName[flag])
+                    intent.putExtra("sd",startDate[flag])
+                    intent.putExtra("dl",deadline[flag])
+                    intent.putExtra("op",overallprogress[flag])
+                    intent.putExtra("la",latestactivity[flag])
+                    intent.putExtra("td",taskdeadline[flag])
+                    intent.putExtra("ts",taskstatus[flag])
+                    mContext.startActivity(intent)
+                    (mContext as Activity).overridePendingTransition(R.anim.animation_leave, R.anim.animation_enter)
+                }
+            }
+            else if(intention=="workon"){
+                pagerImageView.setOnClickListener{
+
+                    val ProjectArray = target.
+                        replace("[", "").
+                        replace("]", "").
+                        replace("\"", "").split(",")
+
+                    var i = 0
+                    var k = 1
+                    var l=2
+                    var m=3
+                    var o=4
+                    var p=5
+                    var q=6
+
+                    Log.d("size", "" + ProjectArray.size)
+                    val size = ProjectArray.size
+                    while (i < size) {
+                        val un = ProjectArray[i]
+                        clientName.add(un)
+                        i += 7
+
+                    }
+                    while (k < size) {
+                        val pw = ProjectArray[k]
+                        startDate.add(pw)
+                        k += 7
+                    }
+                    while (l < size) {
+                        val pw = ProjectArray[l]
+                        deadline.add(pw)
+                        l += 7
+                    }
+                    while (m < size) {
+                        val pw = ProjectArray[m]
+                        overallprogress.add(pw)
+                        m += 7
+                    }
+                    while (o < size) {
+                        val pw = ProjectArray[o]
+                        latestactivity.add(pw)
+                        o += 7
+                    }
+                    while (p < size) {
+                        val pw = ProjectArray[p]
+                        taskdeadline.add(pw)
+                        p += 7
+                    }
+                    while (q < size) {
+                        val pw = ProjectArray[q]
+                        taskstatus.add(pw)
+                        q += 7
+                    }
+
+                    var n=0
+                    while(n<clientName.size)
+                    {   if(clientList[n]==client)
+                        flag=n
+                        n++
+                    }
+
+                    pagerImageView.startAnimation(animateOnSelect)
+                    val intent= Intent(mContext, EmployeeDashboard::class.java )
+
+                    intent.putExtra("ciU", imageUrl)
+                    intent.putExtra("username",username)
                     intent.putExtra("cN",clientName[flag])
                     intent.putExtra("sd",startDate[flag])
                     intent.putExtra("dl",deadline[flag])

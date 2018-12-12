@@ -1,12 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
+        android:layout_width="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
         android:background="@drawable/background"
+        android:gravity="center"
+        android:layout_gravity="center"
         android:layout_height="match_parent">
-    <TextView
-            android:id="@+id/cat"
-            android:layout_width="match_parent"
-              android:layout_height="wrap_content"/>
 
+    <TextView
+            android:id="@+id/choose"
+            android:layout_width="match_parent"
+            android:textColor="#FFF"
+            android:text="CHOOSE PROJECT"
+            android:textStyle="normal"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:layout_height="wrap_content"/>
+
+    <android.support.v4.view.ViewPager
+            android:layout_below="@+id/choose"
+            android:id="@+id/inside_pager"
+            android:background="@drawable/background"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:padding="20dp"
+            android:layout_gravity="center"/>
+
+
+    <dot10tech.com.dot10projects.UI.IndefinitePagerIndicator
+            android:layout_below="@+id/inside_pager"
+            android:id="@+id/pager_indicator"
+            android:gravity="center"
+            app:dotColor="@color/dot_color"
+            app:selectedDotColor="@color/selected_dot_color"
+            app:dotRadius="5dp"
+            android:layout_centerHorizontal="true"
+            app:selectedDotRadius="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 </RelativeLayout>

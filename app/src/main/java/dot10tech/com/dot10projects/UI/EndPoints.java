@@ -8,6 +8,7 @@ public class EndPoints {
     public static final String NEWCLIENTDETAILFILE="addNewClient.php";
     public static final String NEWCLIENTLOGOFILE="addClientLogo.php";
 
+
     /*public static final String UPLOAD_URL = ROOT_URL + UPLOADAPIFILE+"uploadpic";*/
 
     public static final String NEW_CLIENT=ROOT_URL+NEWCLIENTDETAILFILE;

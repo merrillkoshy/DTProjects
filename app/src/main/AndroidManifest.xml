@@ -69,6 +69,8 @@
         <activity android:name=".Employee.EditTeamActivity"/>
         <activity android:name=".UI.UploadActivity"/>
         <activity android:name=".Admin.ClientDetails.AddNewProjectDetails"/>
+        <activity android:name=".Employee.EmployeeDashboard"/>
+        <activity android:name=".Employee.Chatbox"/>
     </application>
 
 </manifest>
