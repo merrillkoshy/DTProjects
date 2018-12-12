@@ -27,8 +27,12 @@ import dot10tech.com.dot10projects.Networking.VolleySingleton
 import dot10tech.com.dot10projects.UI.EndPoints
 import kotlinx.android.synthetic.main.activity_editclientdetail.*
 import kotlinx.android.synthetic.main.chatbox_item.*
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.OkHttpClient
 import org.json.JSONException
 import org.json.JSONObject
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -37,6 +41,7 @@ import java.util.*
 
 class EmployeeDashboard:AppCompatActivity(), GestureDetector.OnGestureListener{
 
+    private var target = String()
     private  var commentpost= String()
     private var dateandtime= String()
     private var username= String()
@@ -44,6 +49,7 @@ class EmployeeDashboard:AppCompatActivity(), GestureDetector.OnGestureListener{
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        fetchJson()
         initialise()
     }
 
@@ -138,19 +144,24 @@ class EmployeeDashboard:AppCompatActivity(), GestureDetector.OnGestureListener{
             // Set a positive button and its click listener on alert dialog
 
             builder.setPositiveButton("SEND"){dialog, which ->
-                commentpost=editText.text.toString().trim()
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    val current=LocalTime.now().toString()
-                    val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss")
-                    dateandtime =  current.format(formatter)
-                }else {
-                    var date = Date();
-                    val formatter = SimpleDateFormat("MMM dd yyyy HH:mma")
-                    dateandtime = formatter.format(date)
 
-                }
-                Log.d("comment",commentpost)
-                Log.d("date and time",dateandtime)
+
+                    commentpost = editText.text.toString().trim()
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        val current = LocalTime.now().toString()
+                        val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss")
+                        dateandtime = current.format(formatter)
+                    } else {
+                        var date = Date();
+                        val formatter = SimpleDateFormat("MMM dd yyyy HH:mma")
+                        dateandtime = formatter.format(date)
+
+                    }
+                    Log.d("comment", commentpost)
+                    Log.d("date and time", dateandtime)
+                if(commentpost!=""){addMessage()}
+
+
                 /*addMessage()*/
 
             }
@@ -184,12 +195,57 @@ class EmployeeDashboard:AppCompatActivity(), GestureDetector.OnGestureListener{
 
     override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
         if (e1!!.getX() - e2!!.getX() > 50) {
+            val clientArray = target.replace("[", "").replace("]", "").replace("\"", "").split(",")
+
+            Log.d("commentpostsize",""+clientArray.size)
+            Log.d("target",""+target[0])
+            var i = 0
+            var j = 1
+            var k = 2
+            var l = 3
+
+            val usernames = ArrayList<String>()
+            val messages = ArrayList<String>()
+            val dateandtimes = ArrayList<String>()
+            val categories = ArrayList<String>()
+
+            Log.d("size", "" + clientArray.size)
+            val size = clientArray.size
+            while (i < size) {
+                val un = clientArray[i]
+                usernames.add(un)
+                i += 4
+
+            }
+            while (j < size) {
+                val pw = clientArray[j]
+                messages.add(pw)
+                j += 4
+            }
+            while (k < size) {
+                val pw = clientArray[k]
+                dateandtimes.add(pw)
+                k += 4
+            }
+            while (l < size) {
+                val pw = clientArray[l]
+                categories.add(pw)
+                l += 4
+            }
 
             val startchatbox=Intent(this,Chatbox::class.java)
+
+
+
+            startchatbox.putExtra("usernames",usernames)
+            startchatbox.putExtra("messages",messages)
+            startchatbox.putExtra("dateandtimes",dateandtimes)
+            startchatbox.putExtra("categories",categories)
 
             startchatbox.putExtra("username",username)
             startchatbox.putExtra("message",commentpost)
             startchatbox.putExtra("dateandtime",dateandtime)
+
 
             startActivity(startchatbox)
             return true;
@@ -208,14 +264,13 @@ class EmployeeDashboard:AppCompatActivity(), GestureDetector.OnGestureListener{
     }
 
     fun addMessage(){
-            val stringRequest = object : StringRequest(Request.Method.POST, EndPoints.UPDATE_URL, Response.Listener<String>{
+            val stringRequest = object : StringRequest(Request.Method.POST, EndPoints.ADDNEWCHAT, Response.Listener<String>{
                     response ->
                 try {
                     val obj = JSONObject(response)
-                    Toast.makeText(applicationContext, obj.getString("message"), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(applicationContext, obj.getString("output"), Toast.LENGTH_SHORT).show()
 
-                    val intent= Intent(this,EmployeeDashboard::class.java)
-                    startActivity(intent)
+
                 }catch (e: JSONException){
                     e.printStackTrace()
                 }
@@ -230,10 +285,35 @@ class EmployeeDashboard:AppCompatActivity(), GestureDetector.OnGestureListener{
                     val params = HashMap<String, String>()
 
                     params.put("message", commentpost)
+                    params.put("username", username)
+                    params.put("dateandtime", dateandtime)
+                    params.put("category", "Team")
                     return params
                 }
             }
             VolleySingleton.instance?.addToRequestQueue(stringRequest)
+    }
+
+    fun fetchJson() {
+        val url = "https://dot10tech.com/mobileapp/scripts/chats/viewChat.php"
+
+        val client = OkHttpClient()
+        val request = okhttp3.Request.Builder().url(url).build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onResponse(call: Call, response: okhttp3.Response) {
+                val body = response.body()?.string()
+
+                //Slicing the response
+                target = body.toString()
+
+            }
+
+            override fun onFailure(call: Call, e: IOException) {
+                println("Failed to execute request")
+            }
+        })
+
     }
 
 

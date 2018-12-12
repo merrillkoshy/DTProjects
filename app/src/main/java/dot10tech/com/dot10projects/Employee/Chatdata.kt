@@ -3,7 +3,9 @@ package dot10tech.com.dot10projects.Employee
 class Chatdata {
 
     var name: String? = null
-    var image_drawable: Int = 0
+    var comment: String? = null
+    var srcurl: String? = null
+    var times: String? = null
 
     fun getNames(): String {
         return name.toString()
@@ -12,13 +14,27 @@ class Chatdata {
     fun setNames(name: String) {
         this.name = name
     }
-
-    fun getImage_drawables(): Int {
-        return image_drawable
+    fun setComments(comment: String) {
+        this.comment = comment
     }
 
-    fun setImage_drawables(image_drawable: Int) {
-        this.image_drawable = image_drawable
+    fun getComments():String {
+        return comment.toString()
+    }
+
+    fun setTs(times: String) {
+        this.times = times
+    }
+
+    fun getTs():String {
+        return times.toString()
+    }
+    fun get_affiliation_icon(): String {
+        return srcurl.toString()
+    }
+
+    fun set_affiliation_icon(srcurl: String) {
+        this.srcurl = srcurl
     }
 
 }

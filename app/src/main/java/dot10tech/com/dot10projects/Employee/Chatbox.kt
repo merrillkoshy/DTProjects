@@ -22,20 +22,18 @@ class Chatbox:AppCompatActivity(){
     private var imageModelArrayList: ArrayList<Chatdata>? = null
     private var adapter: ChatAdapter? = null
 
-    private var username=intent.getStringExtra("username")
-    private var commentpost=intent.getStringExtra("message")
-    private var dateandtime=intent.getStringExtra("dateandtime")
 
-    private val myImageList = intArrayOf(R.drawable.ic_menu_send,R.drawable.ic_menu_send,R.drawable.ic_menu_send,R.drawable.ic_menu_send,R.drawable.ic_menu_send,R.drawable.ic_menu_send,R.drawable.ic_menu_send,R.drawable.ic_menu_send)
+
+    private val myImageList = arrayOf("https://dot10tech.com/mobileApp/assets/appicon.png")
     private val myImageNameList = arrayOf("Benz", "Bike", "Car", "Carrera", "Ferrari", "Harly", "Lamborghini", "Silver")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chatbox)
 
-        username_tv.text=username
-        message.text=commentpost
-        time.text=dateandtime
+
+
+
 
         recyclerView = findViewById(R.id.cbox) as RecyclerView
 
@@ -62,13 +60,24 @@ class Chatbox:AppCompatActivity(){
 
     private fun populateList(): ArrayList<Chatdata> {
 
+        val usernames=intent.getStringArrayListExtra("usernames")
+        val commentposts=intent.getStringArrayListExtra("messages")
+        val dateandtimes=intent.getStringArrayListExtra("dateandtimes")
+        val categories=intent.getStringArrayListExtra("categories")
+
         val list = ArrayList<Chatdata>()
 
-        for (i in 0..7) {
+
+        var i=0
+        while (i < commentposts.size) {
             val imageModel = Chatdata()
-            imageModel.setNames(myImageNameList[i])
-            imageModel.setImage_drawables(myImageList[i])
+            Log.d("comments",commentposts[i])
+            imageModel.setNames(usernames[i])
+            imageModel.setTs(dateandtimes[i])
+            imageModel.setComments(commentposts[i])
+            imageModel.set_affiliation_icon(myImageList[0])
             list.add(imageModel)
+            i++
         }
 
         return list

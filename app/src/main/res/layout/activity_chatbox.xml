@@ -6,24 +6,7 @@
         android:background="@drawable/background"
      android:layout_width="match_parent"
      android:layout_height="match_parent">
-    <TextView
-            android:id="@+id/username_tv"
-            android:text="sample"
-            android:textColor="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="?actionBarSize"/>
-    <TextView
-            android:id="@+id/message"
-            android:text="sample"
-            android:textColor="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="?actionBarSize"/>
-    <TextView
-            android:id="@+id/time"
-            android:text="sample"
-            android:textColor="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="?actionBarSize"/>
+
 
 <android.support.v7.widget.RecyclerView
         android:id="@+id/cbox"

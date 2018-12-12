@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import com.squareup.picasso.Picasso
 import dot10tech.com.dot10projects.R
 
 class ChatAdapter(ctx: Context, private val imageModelArrayList: ArrayList<Chatdata>) : RecyclerView.Adapter<ChatAdapter.MyViewHolder>() {
@@ -27,9 +28,14 @@ class ChatAdapter(ctx: Context, private val imageModelArrayList: ArrayList<Chatd
 
     override fun onBindViewHolder(holder: ChatAdapter.MyViewHolder, position: Int) {
 
-        holder.iv.setImageResource(imageModelArrayList[position].getImage_drawables())
-        holder.time.setText(imageModelArrayList[position].getNames())
-        holder.message.setText(imageModelArrayList[position].getNames())
+        Picasso.get().load(imageModelArrayList[position].
+            get_affiliation_icon()).fit().
+            placeholder(R.drawable.progress_animation).
+            into(holder.iv)
+
+        holder.postername.setText(imageModelArrayList[position].getNames())
+        holder.message.setText(imageModelArrayList[position].getComments())
+        holder.time.setText(imageModelArrayList[position].getTs())
     }
 
     override fun getItemCount(): Int {
@@ -40,11 +46,13 @@ class ChatAdapter(ctx: Context, private val imageModelArrayList: ArrayList<Chatd
 
         var time: TextView
         var message: TextView
+        var postername: TextView
         var iv: ImageView
 
         init {
 
-            message = itemView.findViewById(R.id.message) as TextView
+            message = itemView.findViewById(R.id.messagecomment) as TextView
+            postername = itemView.findViewById(R.id.postername) as TextView
             time = itemView.findViewById(R.id.timestamp) as TextView
             iv = itemView.findViewById(R.id.iv) as ImageView
         }
