@@ -21,34 +21,37 @@
         card_view:cardCornerRadius="4dp">
 
     <LinearLayout
+            android:orientation="vertical"
+            android:background="@drawable/progressbg"
+            android:layout_width="match_parent"
+            android:layout_height="160dp">
+
+    <LinearLayout
             android:layout_width="match_parent"
             android:background="@drawable/background"
-            android:layout_height="150dp"
+            android:layout_height="?actionBarSize"
             android:orientation="horizontal">
 
         <ImageView
-                android:layout_width="80dp"
+                android:layout_width="40dp"
                 android:layout_height="?actionBarSize"
                 android:layout_marginTop="10dp"
-
+                android:layout_marginBottom="10dp"
                 android:id="@+id/iv"
                 android:layout_marginLeft="10dp"
                 android:src="@drawable/burger"/>
-
-        <LinearLayout
-                android:orientation="vertical"
-                android:background="@drawable/progressbg"
+        <TextView
+                android:id="@+id/postername"
+                android:text="sample"
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:gravity="center_vertical"
+                android:layout_marginStart="20dp"
                 android:layout_width="match_parent"
-                android:layout_height="160dp">
-            <TextView
-                    android:id="@+id/postername"
-                    android:text="sample"
-                    android:textSize="18sp"
-                    android:textColor="@color/white"
-                    android:gravity="center_vertical"
-                    android:layout_marginStart="20dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="?actionBarSize"/>
+                android:layout_height="?actionBarSize"/>
+    </LinearLayout>
+
+
             <TextView
                     android:id="@+id/messagecomment"
                     android:text="sample"
@@ -68,7 +71,7 @@
                     android:layout_marginEnd="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
-        </LinearLayout>
+
 
 
     </LinearLayout>

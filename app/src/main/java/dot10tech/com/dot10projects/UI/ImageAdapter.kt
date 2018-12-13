@@ -15,6 +15,7 @@ import java.util.ArrayList
 import android.app.Activity
 import dot10tech.com.dot10projects.Admin.ClientDetails.ClientDetailActivity
 import dot10tech.com.dot10projects.Admin.ClientDetails.EditClientDetail
+import dot10tech.com.dot10projects.Client.ClientDataClass
 import dot10tech.com.dot10projects.Employee.EmployeeDashboard
 import dot10tech.com.dot10projects.Employee.EmployeeDetails
 import okhttp3.*
@@ -343,6 +344,10 @@ class ImageAdapter(
                     intent.putExtra("la",latestactivity[flag])
                     intent.putExtra("td",taskdeadline[flag])
                     intent.putExtra("ts",taskstatus[flag])
+
+                    val dataclassclient= ClientDataClass()
+                    dataclassclient.setNames(clientName[flag])
+
                     mContext.startActivity(intent)
                     (mContext as Activity).overridePendingTransition(R.anim.animation_leave, R.anim.animation_enter)
                 }

@@ -2,9 +2,14 @@ package dot10tech.com.dot10projects.Employee
 
 import android.app.AlertDialog
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Color
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
+import android.support.v4.content.FileProvider
 import android.support.v4.view.GestureDetectorCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -14,24 +19,22 @@ import android.widget.Toast
 import com.squareup.picasso.Picasso
 import dot10tech.com.dot10projects.R
 import kotlinx.android.synthetic.main.activity_employeedashboard.*
-import android.widget.LinearLayout
-import dot10tech.com.dot10projects.MainActivity
 import android.widget.EditText
 import com.android.volley.AuthFailureError
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
-import dot10tech.com.dot10projects.Admin.AdminMenu
+import dot10tech.com.dot10projects.Chats.Chatbox
+import dot10tech.com.dot10projects.Client.ClientDataClass
 import dot10tech.com.dot10projects.Networking.VolleySingleton
 import dot10tech.com.dot10projects.UI.EndPoints
-import kotlinx.android.synthetic.main.activity_editclientdetail.*
-import kotlinx.android.synthetic.main.chatbox_item.*
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.OkHttpClient
 import org.json.JSONException
 import org.json.JSONObject
+import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.time.LocalTime
@@ -47,11 +50,18 @@ class EmployeeDashboard:AppCompatActivity(), GestureDetector.OnGestureListener{
     private var username= String()
     var gDetector: GestureDetectorCompat? = null
 
+    private var REQUEST_IMAGE_CAPTURE=1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setDisplayShowHomeEnabled(true)
+
         fetchJson()
         initialise()
     }
+
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         this.gDetector?.onTouchEvent(event)
@@ -124,7 +134,39 @@ class EmployeeDashboard:AppCompatActivity(), GestureDetector.OnGestureListener{
 
     }
 
+
+
+
     fun reporting(){
+
+        sendpic.setOnClickListener {
+            val REQUEST_TAKE_PHOTO = 1
+
+            Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+                // Ensure that there's a camera activity to handle the intent
+                takePictureIntent.resolveActivity(packageManager)?.also {
+                    // Create the File where the photo should go
+                    val photoFile: File? = try {
+                        createImageFile()
+                    } catch (ex: IOException) {
+                        // Error occurred while creating the File
+
+                        null
+                    }
+                    // Continue only if the File was successfully created
+                    photoFile?.also {
+                        val photoURI: Uri = FileProvider.getUriForFile(
+                            this,
+                            "com.example.android.fileprovider",
+                            it
+                        )
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                        startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO)
+                    }
+                }
+            }
+
+        }
 
         reportcomment.setOnClickListener {
             val builder = AlertDialog.Builder(this@EmployeeDashboard)
@@ -153,7 +195,7 @@ class EmployeeDashboard:AppCompatActivity(), GestureDetector.OnGestureListener{
                         dateandtime = current.format(formatter)
                     } else {
                         var date = Date();
-                        val formatter = SimpleDateFormat("MMM dd yyyy HH:mma")
+                        val formatter = SimpleDateFormat("MMM dd yyyy/HH:mma")
                         dateandtime = formatter.format(date)
 
                     }
@@ -178,6 +220,46 @@ class EmployeeDashboard:AppCompatActivity(), GestureDetector.OnGestureListener{
 
             // Display the alert dialog on app interface
             dialog.show()
+        }
+    }
+
+    var mCurrentPhotoPath= String()
+
+    @Throws(IOException::class)
+    private fun createImageFile(): File {
+        // Create an image file name
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val storageDir: File = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        return File.createTempFile(
+            "JPEG_${timeStamp}_", /* prefix */
+            ".jpg", /* suffix */
+            storageDir /* directory */
+        ).apply {
+            // Save a file: path for use with ACTION_VIEW intents
+            mCurrentPhotoPath = absolutePath
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+/*            val imageBitmap = data!!.extras.get("data") as Bitmap
+            mImageView.setImageBitmap(imageBitmap)*/
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val current = LocalTime.now().toString()
+                val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss")
+                dateandtime = current.format(formatter)
+            } else {
+                var date = Date();
+                val formatter = SimpleDateFormat("MMM dd yyyy/HH:mma")
+                dateandtime = formatter.format(date)
+
+            }
+
+            Picasso.get().load(mCurrentPhotoPath)
+            val show_date=dateandtime.split("/")[0]
+            val show_time=dateandtime.split("/")[1]
+
+            timestamp.text="Image posted at :"+"\n\n"+show_date+"\n"+show_time
         }
     }
 
@@ -233,10 +315,11 @@ class EmployeeDashboard:AppCompatActivity(), GestureDetector.OnGestureListener{
                 l += 4
             }
 
-            val startchatbox=Intent(this,Chatbox::class.java)
+            val clientName=intent.getStringExtra("cN")
+            val startchatbox=Intent(this, Chatbox::class.java)
 
 
-
+            startchatbox.putExtra("clientname",clientName)
             startchatbox.putExtra("usernames",usernames)
             startchatbox.putExtra("messages",messages)
             startchatbox.putExtra("dateandtimes",dateandtimes)
@@ -314,6 +397,11 @@ class EmployeeDashboard:AppCompatActivity(), GestureDetector.OnGestureListener{
             }
         })
 
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
 

@@ -1,4 +1,4 @@
-package dot10tech.com.dot10projects.Employee
+package dot10tech.com.dot10projects.Chats
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
@@ -19,17 +19,17 @@ class ChatAdapter(ctx: Context, private val imageModelArrayList: ArrayList<Chatd
         inflater = LayoutInflater.from(ctx)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatAdapter.MyViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
 
         val view = inflater.inflate(R.layout.chatbox_item, parent, false)
 
         return MyViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: ChatAdapter.MyViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
         Picasso.get().load(imageModelArrayList[position].
-            get_affiliation_icon()).fit().
+            get_affiliation_icon()).
             placeholder(R.drawable.progress_animation).
             into(holder.iv)
 

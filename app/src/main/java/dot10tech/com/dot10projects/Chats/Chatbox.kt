@@ -1,4 +1,4 @@
-package dot10tech.com.dot10projects.Employee
+package dot10tech.com.dot10projects.Chats
 
 import android.content.Context
 import android.os.Bundle
@@ -10,11 +10,9 @@ import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.ListView
 import android.widget.Toast
+import dot10tech.com.dot10projects.Client.ClientDataClass
 import dot10tech.com.dot10projects.R
-import kotlinx.android.synthetic.main.activity_chatbox.*
 
 class Chatbox:AppCompatActivity(){
 
@@ -25,12 +23,12 @@ class Chatbox:AppCompatActivity(){
 
 
     private val myImageList = arrayOf("https://dot10tech.com/mobileApp/assets/appicon.png")
-    private val myImageNameList = arrayOf("Benz", "Bike", "Car", "Carrera", "Ferrari", "Harly", "Lamborghini", "Silver")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chatbox)
-
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setDisplayShowHomeEnabled(true)
 
 
 
@@ -38,21 +36,32 @@ class Chatbox:AppCompatActivity(){
         recyclerView = findViewById(R.id.cbox) as RecyclerView
 
         imageModelArrayList = populateList()
+
+
+        title=intent.getStringExtra("clientname")
+
+
         Log.d("hjhjh", imageModelArrayList!!.size.toString() + "")
         adapter = ChatAdapter(this, imageModelArrayList!!)
         recyclerView!!.adapter = adapter
         recyclerView!!.layoutManager = LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
 
-        recyclerView!!.addOnItemTouchListener(RecyclerTouchListener(applicationContext, recyclerView!!, object : ClickListener {
+        recyclerView!!.addOnItemTouchListener(
+            RecyclerTouchListener(
+                applicationContext,
+                recyclerView!!,
+                object : ClickListener {
 
-            override fun onClick(view: View, position: Int) {
-                Toast.makeText(this@Chatbox, imageModelArrayList!![position].getNames(), Toast.LENGTH_SHORT).show()
-            }
+                    override fun onClick(view: View, position: Int) {
+                        Toast.makeText(this@Chatbox, imageModelArrayList!![position].getNames(), Toast.LENGTH_SHORT)
+                            .show()
+                    }
 
-            override fun onLongClick(view: View?, position: Int) {
+                    override fun onLongClick(view: View?, position: Int) {
 
-            }
-        }))
+                    }
+                })
+        )
 
     }
 
@@ -71,7 +80,6 @@ class Chatbox:AppCompatActivity(){
         var i=0
         while (i < commentposts.size) {
             val imageModel = Chatdata()
-            Log.d("comments",commentposts[i])
             imageModel.setNames(usernames[i])
             imageModel.setTs(dateandtimes[i])
             imageModel.setComments(commentposts[i])
@@ -124,5 +132,10 @@ class Chatbox:AppCompatActivity(){
         override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {
 
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 }

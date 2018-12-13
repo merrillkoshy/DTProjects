@@ -145,6 +145,31 @@
                 android:drawableStart="@drawable/ic_menu_camera"
                 android:text="POST A PICTURE"
                 android:layout_height="?actionBarSize"/>
+        <LinearLayout
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content">
+
+            <ImageView
+                    android:src="@mipmap/ic_launcher"
+                    android:id="@+id/mImageView"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"/>
+
+            <TextView
+                    android:id="@+id/timestamp"
+                    android:layout_marginStart="10dp"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
+                <ImageView
+                        android:id="@+id/fulls"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
 
             </LinearLayout>
 

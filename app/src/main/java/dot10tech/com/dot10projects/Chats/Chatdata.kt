@@ -1,4 +1,4 @@
-package dot10tech.com.dot10projects.Employee
+package dot10tech.com.dot10projects.Chats
 
 class Chatdata {
 
