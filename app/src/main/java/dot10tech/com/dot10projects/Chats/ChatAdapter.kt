@@ -33,9 +33,21 @@ class ChatAdapter(ctx: Context, private val imageModelArrayList: ArrayList<Chatd
             placeholder(R.drawable.progress_animation).
             into(holder.iv)
 
-        holder.postername.setText(imageModelArrayList[position].getNames())
-        holder.message.setText(imageModelArrayList[position].getComments())
-        holder.time.setText(imageModelArrayList[position].getTs())
+            holder.postername.setText(imageModelArrayList[position].getNames())
+
+        if(!imageModelArrayList[position].getComments().contains("https:")) {
+            holder.message.visibility=View.VISIBLE
+            holder.message.setText(imageModelArrayList[position].getComments())
+        }
+        holder.time.setText(imageModelArrayList[position].getTs().split("\\/")[1])
+
+        if(imageModelArrayList[position].
+                getComments().contains("https:")) {
+            holder.cp.visibility=View.VISIBLE
+            Picasso.get().load(
+                imageModelArrayList[position].getComments().replace("\\","")
+            ).placeholder(R.drawable.progress_animation).into(holder.cp)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -48,6 +60,7 @@ class ChatAdapter(ctx: Context, private val imageModelArrayList: ArrayList<Chatd
         var message: TextView
         var postername: TextView
         var iv: ImageView
+        var cp:ImageView
 
         init {
 
@@ -55,6 +68,7 @@ class ChatAdapter(ctx: Context, private val imageModelArrayList: ArrayList<Chatd
             postername = itemView.findViewById(R.id.postername) as TextView
             time = itemView.findViewById(R.id.timestamp) as TextView
             iv = itemView.findViewById(R.id.iv) as ImageView
+            cp=itemView.findViewById(R.id.commentpic) as ImageView
         }
 
     }

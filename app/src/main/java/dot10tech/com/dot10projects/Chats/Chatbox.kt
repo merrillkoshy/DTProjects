@@ -1,6 +1,7 @@
 package dot10tech.com.dot10projects.Chats
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -13,6 +14,7 @@ import android.view.View
 import android.widget.Toast
 import dot10tech.com.dot10projects.Client.ClientDataClass
 import dot10tech.com.dot10projects.R
+import kotlinx.android.synthetic.main.activity_chatbox.*
 
 class Chatbox:AppCompatActivity(){
 
@@ -29,7 +31,7 @@ class Chatbox:AppCompatActivity(){
         setContentView(R.layout.activity_chatbox)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
-
+        chatbuttons()
 
 
 
@@ -65,6 +67,15 @@ class Chatbox:AppCompatActivity(){
 
     }
 
+    private fun chatbuttons() {
+        chatcomment.setOnClickListener {
+            val chatcomment=Intent(this,ChatComment::class.java)
+            chatcomment.putExtra("username",intent.getStringExtra("username"))
+            chatcomment.putExtra("dateandtime",intent.getStringExtra("dateandtime"))
+            startActivity(chatcomment)
+        }
+        chatpic.setOnClickListener {  }
+    }
 
 
     private fun populateList(): ArrayList<Chatdata> {

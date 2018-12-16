@@ -109,5 +109,6 @@
     <string name="create_project">CREATE PROJECT</string>
     <string name="proceed">PROCEED</string>
     <string name="read_file">This app needs access to your file storage so that it can read photos.</string>
+    <string name="write_to_file">This app needs access to your file storage so that it can upload photos.</string>
 
 </resources>

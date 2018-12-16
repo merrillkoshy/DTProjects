@@ -12,6 +12,7 @@ public class EndPoints {
     /*public static final String UPLOAD_URL = ROOT_URL + UPLOADAPIFILE+"uploadpic";*/
 
     public static final String ADDNEWCHAT=ROOT_URL+CHAT_DIR;
+    public static final String ADDNEWCHATIMAGE=ROOT_URL+CHAT_DIR;
     public static final String NEW_CLIENT=ROOT_URL+NEWCLIENTDETAILFILE;
     public static final String NEW_CLIENTLOGO=ROOT_URL+NEWCLIENTLOGOFILE;
     public static  final String UPLOAD_URL="https://dot10tech.com";

@@ -85,6 +85,10 @@
         <activity android:name=".Admin.ClientDetails.AddNewProjectDetails"/>
         <activity android:name=".Employee.EmployeeDashboard"/>
         <activity android:name=".Chats.Chatbox"/>
+        <activity android:name=".Chats.Cam"/>
+        <activity android:name="Cam"/>
+        <activity android:name=".Chats.ChatComment"
+                  android:theme="@style/Theme.Transparent"/>
     </application>
 
 </manifest>

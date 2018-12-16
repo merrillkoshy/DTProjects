@@ -24,7 +24,7 @@
             android:orientation="vertical"
             android:background="@drawable/progressbg"
             android:layout_width="match_parent"
-            android:layout_height="160dp">
+            android:layout_height="wrap_content">
 
     <LinearLayout
             android:layout_width="match_parent"
@@ -53,6 +53,7 @@
 
 
             <TextView
+                    android:visibility="gone"
                     android:id="@+id/messagecomment"
                     android:text="sample"
                     android:textSize="18sp"
@@ -61,6 +62,11 @@
                     android:layout_marginStart="20dp"
                     android:layout_width="match_parent"
                     android:layout_height="?actionBarSize"/>
+        <ImageView
+                android:id="@+id/commentpic"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"/>
 
             <TextView
                     android:id="@+id/timestamp"
@@ -70,7 +76,7 @@
                     android:textSize="15sp"
                     android:layout_marginEnd="10dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="40dp"/>
 
 
 

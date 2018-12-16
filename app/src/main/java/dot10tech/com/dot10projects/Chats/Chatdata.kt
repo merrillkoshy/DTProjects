@@ -6,6 +6,7 @@ class Chatdata {
     var comment: String? = null
     var srcurl: String? = null
     var times: String? = null
+    var picurl: String? = null
 
     fun getNames(): String {
         return name.toString()
@@ -29,6 +30,15 @@ class Chatdata {
     fun getTs():String {
         return times.toString()
     }
+
+    fun setPic(picurl: String) {
+        this.picurl = picurl
+    }
+
+    fun getPic():String {
+        return picurl.toString()
+    }
+
     fun get_affiliation_icon(): String {
         return srcurl.toString()
     }

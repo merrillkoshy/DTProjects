@@ -4,12 +4,14 @@ import android.app.Application
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.Volley
+import com.facebook.drawee.backends.pipeline.Fresco
 
 
 class VolleySingleton : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+        Fresco.initialize(this)
     }
 
     val requestQueue: RequestQueue? = null

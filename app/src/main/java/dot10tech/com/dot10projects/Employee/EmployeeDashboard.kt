@@ -1,9 +1,14 @@
 package dot10tech.com.dot10projects.Employee
 
+import android.Manifest
+import android.app.Activity
 import android.app.AlertDialog
+import android.content.ContentValues
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -15,6 +20,7 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
+import android.view.View
 import android.widget.Toast
 import com.squareup.picasso.Picasso
 import dot10tech.com.dot10projects.R
@@ -25,16 +31,26 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
+import com.facebook.drawee.view.SimpleDraweeView
+import dot10tech.com.dot10projects.Chats.ChatImageUploadInterface
 import dot10tech.com.dot10projects.Chats.Chatbox
 import dot10tech.com.dot10projects.Client.ClientDataClass
+import dot10tech.com.dot10projects.MainActivity
 import dot10tech.com.dot10projects.Networking.VolleySingleton
 import dot10tech.com.dot10projects.UI.EndPoints
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.OkHttpClient
+import dot10tech.com.dot10projects.UI.RealPathUtil
+import dot10tech.com.dot10projects.UI.UploadImageInterface
+import dot10tech.com.dot10projects.UI.UploadObject
+import kotlinx.android.synthetic.main.activity_upload.*
+import okhttp3.*
 import org.json.JSONException
 import org.json.JSONObject
+import pub.devrel.easypermissions.EasyPermissions
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.time.LocalTime
@@ -44,13 +60,23 @@ import java.util.*
 
 class EmployeeDashboard:AppCompatActivity(), GestureDetector.OnGestureListener{
 
+    private val TAG = MainActivity::class.java.getSimpleName();
     private var target = String()
-    private  var commentpost= String()
+    private var commentpost= String()
     private var dateandtime= String()
     private var username= String()
+    private var theUri=Uri.EMPTY
+
+    private val SERVER_PATH = EndPoints.UPLOAD_URL
+    private var commentedpic= String()
+    private val READ_REQUEST_CODE= 300
+    private val pictureImagePath = ""
+
     var gDetector: GestureDetectorCompat? = null
 
-    private var REQUEST_IMAGE_CAPTURE=1
+    private val CAMERA = 2
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -140,32 +166,9 @@ class EmployeeDashboard:AppCompatActivity(), GestureDetector.OnGestureListener{
     fun reporting(){
 
         sendpic.setOnClickListener {
-            val REQUEST_TAKE_PHOTO = 1
 
-            Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-                // Ensure that there's a camera activity to handle the intent
-                takePictureIntent.resolveActivity(packageManager)?.also {
-                    // Create the File where the photo should go
-                    val photoFile: File? = try {
-                        createImageFile()
-                    } catch (ex: IOException) {
-                        // Error occurred while creating the File
-
-                        null
-                    }
-                    // Continue only if the File was successfully created
-                    photoFile?.also {
-                        val photoURI: Uri = FileProvider.getUriForFile(
-                            this,
-                            "com.example.android.fileprovider",
-                            it
-                        )
-                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-                        startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO)
-                    }
-                }
-            }
-
+            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            startActivityForResult(intent, CAMERA)
         }
 
         reportcomment.setOnClickListener {
@@ -220,30 +223,22 @@ class EmployeeDashboard:AppCompatActivity(), GestureDetector.OnGestureListener{
 
             // Display the alert dialog on app interface
             dialog.show()
+            /*val show_date=dateandtime.split("/")[0]
+            val show_time=dateandtime.split("/")[1]*/
         }
     }
 
-    var mCurrentPhotoPath= String()
 
-    @Throws(IOException::class)
-    private fun createImageFile(): File {
-        // Create an image file name
-        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-        val storageDir: File = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        return File.createTempFile(
-            "JPEG_${timeStamp}_", /* prefix */
-            ".jpg", /* suffix */
-            storageDir /* directory */
-        ).apply {
-            // Save a file: path for use with ACTION_VIEW intents
-            mCurrentPhotoPath = absolutePath
-        }
-    }
+
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-/*            val imageBitmap = data!!.extras.get("data") as Bitmap
-            mImageView.setImageBitmap(imageBitmap)*/
+        super.onActivityResult(requestCode, resultCode, data)
+        val thumbnail = data!!.extras!!.get("data") as Bitmap
+        mImageView!!.setImageBitmap(thumbnail)
+        saveImage(thumbnail)
+        Toast.makeText(this@EmployeeDashboard, "Image Saved!", Toast.LENGTH_SHORT).show()
+        if(commentedpic!=""){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 val current = LocalTime.now().toString()
                 val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss")
@@ -254,14 +249,79 @@ class EmployeeDashboard:AppCompatActivity(), GestureDetector.OnGestureListener{
                 dateandtime = formatter.format(date)
 
             }
+            addMessage()
+        }
 
-            Picasso.get().load(mCurrentPhotoPath)
-            val show_date=dateandtime.split("/")[0]
-            val show_time=dateandtime.split("/")[1]
+    }
 
-            timestamp.text="Image posted at :"+"\n\n"+show_date+"\n"+show_time
+    fun saveImage(myBitmap: Bitmap):String {
+        val bytes = ByteArrayOutputStream()
+        myBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        val wallpaperDirectory = File(
+            (Environment.getExternalStorageDirectory()).toString() + IMAGE_DIRECTORY)
+        // have the object build the directory structure, if needed.
+        Log.d("fee",wallpaperDirectory.toString())
+        if (!wallpaperDirectory.exists())
+        {
+
+            wallpaperDirectory.mkdirs()
+        }
+
+        try
+        {
+            Log.d("heel",wallpaperDirectory.toString())
+            val f = File(wallpaperDirectory, ((Calendar.getInstance()
+                .getTimeInMillis()).toString() + ".jpg"))
+            f.createNewFile()
+            val fo = FileOutputStream(f)
+            fo.write(bytes.toByteArray())
+            MediaScannerConnection.scanFile(this,
+                arrayOf(f.getPath()),
+                arrayOf("image/jpeg"), null)
+            fo.close()
+            Log.d("TAG", "File Saved::--->" + f.getAbsolutePath())
+            uploadFile(f)
+            return f.getAbsolutePath()
+        }
+        catch (e1: IOException) {
+            e1.printStackTrace()
+        }
+
+
+        return ""
+    }
+
+    private fun uploadFile(f: File) {
+        if(EasyPermissions.hasPermissions(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+
+            //RequestBody mFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+            val mFile = RequestBody.create(MediaType.parse("image/*"), f);
+            val fileToUpload = MultipartBody.Part.createFormData("file", f.getName(), mFile);
+            val filename = RequestBody.create(MediaType.parse("text/plain"), f.getName());
+            val retrofit =  Retrofit.Builder()
+                .baseUrl(SERVER_PATH)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+            val uploadImage = retrofit.create(ChatImageUploadInterface::class.java)
+
+            val fileUpload = uploadImage.uploadFile(fileToUpload, filename)
+            fileUpload.enqueue(object: retrofit2.Callback<UploadObject> {
+
+                override fun onResponse(call: retrofit2.Call<UploadObject>, response: retrofit2.Response<UploadObject>) {
+                    Toast.makeText(this@EmployeeDashboard, "Response " + response.raw().message(), Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@EmployeeDashboard, "Success " + response.body().success, Toast.LENGTH_LONG).show()
+
+                    commentedpic=EndPoints.UPLOAD_URL+"/mobileApp/scripts/chats/chatImages/"+f.getName()
+                }
+                override fun onFailure(call: retrofit2.Call<UploadObject>, t:Throwable ) {
+                    Log.d(TAG, "Error " + t.message);
+                }
+            });
+        }else{
+            EasyPermissions.requestPermissions(this, getString(R.string.read_file), READ_REQUEST_CODE, Manifest.permission.READ_EXTERNAL_STORAGE);
         }
     }
+
 
     override fun onShowPress(e: MotionEvent?) {
         print(e)
@@ -324,7 +384,6 @@ class EmployeeDashboard:AppCompatActivity(), GestureDetector.OnGestureListener{
             startchatbox.putExtra("messages",messages)
             startchatbox.putExtra("dateandtimes",dateandtimes)
             startchatbox.putExtra("categories",categories)
-
             startchatbox.putExtra("username",username)
             startchatbox.putExtra("message",commentpost)
             startchatbox.putExtra("dateandtime",dateandtime)
@@ -370,12 +429,14 @@ class EmployeeDashboard:AppCompatActivity(), GestureDetector.OnGestureListener{
                     params.put("message", commentpost)
                     params.put("username", username)
                     params.put("dateandtime", dateandtime)
+                    params.put("picurl", commentedpic)
                     params.put("category", "Team")
                     return params
                 }
             }
             VolleySingleton.instance?.addToRequestQueue(stringRequest)
     }
+
 
     fun fetchJson() {
         val url = "https://dot10tech.com/mobileapp/scripts/chats/viewChat.php"
@@ -402,6 +463,9 @@ class EmployeeDashboard:AppCompatActivity(), GestureDetector.OnGestureListener{
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
+    }
+    companion object {
+        private val IMAGE_DIRECTORY = "/DTApp"
     }
 
 
