@@ -15,19 +15,27 @@ import android.view.MotionEvent
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import dot10tech.com.dot10projects.Admin.AdminMenu
+import dot10tech.com.dot10projects.Chats.Chatbox
 import kotlinx.android.synthetic.main.admin_menu.*
 import dot10tech.com.dot10projects.MainActivity
 import okhttp3.*
 import java.io.IOException
+import java.util.ArrayList
 
 
 class ClientDetailActivity:AppCompatActivity(), GestureDetector.OnGestureListener {
 
     var gDetector: GestureDetectorCompat? = null
+    private var target = String()
+    private var commentpost= String()
+    private var dateandtime= String()
+    private var username= String()
+    private var category=String()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initialiseWidgets()
+        fetchJson()
     }
     override fun onTouchEvent(event: MotionEvent): Boolean {
         this.gDetector?.onTouchEvent(event)
@@ -73,6 +81,28 @@ class ClientDetailActivity:AppCompatActivity(), GestureDetector.OnGestureListene
 
     }
 
+    fun fetchJson() {
+        val url = "https://dot10tech.com/mobileapp/scripts/chats/viewChat.php"
+
+        val client = OkHttpClient()
+        val request = okhttp3.Request.Builder().url(url).build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onResponse(call: Call, response: okhttp3.Response) {
+                val body = response.body()?.string()
+
+                //Slicing the response
+                target = body.toString()
+
+            }
+
+            override fun onFailure(call: Call, e: IOException) {
+                println("Failed to execute request")
+            }
+        })
+
+    }
+
     override fun onShowPress(e: MotionEvent?) {
         print(e)
     }
@@ -98,6 +128,65 @@ class ClientDetailActivity:AppCompatActivity(), GestureDetector.OnGestureListene
             a_intent.putExtra("cN",intent.getStringExtra("cN"))
             startActivity(a_intent)
             this.overridePendingTransition(R.anim.menu_drawer_close,R.anim.menu_drawer_open)
+            return true;
+        }
+        if (e1!!.getX() - e2!!.getX() > 50) {
+            val clientArray = target.replace("[", "").replace("]", "").replace("\"", "").split(",")
+
+            Log.d("commentpostsize",""+clientArray.size)
+            Log.d("target",""+target[0])
+            var i = 0
+            var j = 1
+            var k = 2
+            var l = 3
+
+            val usernames = ArrayList<String>()
+            val messages = ArrayList<String>()
+            val dateandtimes = ArrayList<String>()
+            val categories = ArrayList<String>()
+
+            Log.d("size", "" + clientArray.size)
+            val size = clientArray.size
+            while (i < size) {
+                val un = clientArray[i]
+                usernames.add(un)
+                i += 4
+
+            }
+            while (j < size) {
+                val pw = clientArray[j]
+                messages.add(pw)
+                j += 4
+            }
+            while (k < size) {
+                val pw = clientArray[k]
+                dateandtimes.add(pw)
+                k += 4
+            }
+            while (l < size) {
+                val pw = clientArray[l]
+                categories.add(pw)
+                l += 4
+            }
+
+            val clientName=intent.getStringExtra("cN")
+            username=intent.getStringExtra("username").replace("\\t","")
+            category="Admin"
+            val startchatbox=Intent(this, Chatbox::class.java)
+
+
+            startchatbox.putExtra("clientname",clientName)
+            startchatbox.putExtra("usernames",usernames)
+            startchatbox.putExtra("messages",messages)
+            startchatbox.putExtra("dateandtimes",dateandtimes)
+            startchatbox.putExtra("categories",categories)
+            startchatbox.putExtra("category",category)
+            startchatbox.putExtra("username",username)
+            startchatbox.putExtra("message",commentpost)
+            startchatbox.putExtra("dateandtime",dateandtime)
+
+
+            startActivity(startchatbox)
             return true;
         }
         else {

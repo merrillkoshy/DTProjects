@@ -62,6 +62,7 @@ class Chatbox:AppCompatActivity(){
     private var dateandtime= String()
     private var username= String()
     private var commentedpic= String()
+    private var category= String()
 
     private val CAMERA = 2
 
@@ -73,7 +74,7 @@ class Chatbox:AppCompatActivity(){
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
 
-
+        category=intent.getStringExtra("category")
 
         chatcom.setOnClickListener {
 
@@ -110,8 +111,9 @@ class Chatbox:AppCompatActivity(){
         val appbartitle=intent.getStringExtra("clientname")
         title=appbartitle
 
+        val categories=intent.getStringArrayListExtra("categories")
 
-       adapter = ChatAdapter(this, imageModelArrayList!!)
+       adapter = ChatAdapter(this, imageModelArrayList!!, category)
         recyclerView!!.adapter = adapter
         recyclerView!!.layoutManager = LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
         if(imageModelArrayList!!.size>1)
@@ -232,7 +234,7 @@ class Chatbox:AppCompatActivity(){
 
                     updatedModelArrayList=updateListCam()
 
-                    adapter = ChatAdapter(this@Chatbox, updatedModelArrayList!!)
+                    adapter = ChatAdapter(this@Chatbox, updatedModelArrayList!!, category)
                     recyclerView!!.adapter = adapter
 
                     recyclerView!!.invalidate()
@@ -260,7 +262,7 @@ class Chatbox:AppCompatActivity(){
                 if(i==1) {
                     updatedModelArrayList = updateList()
 
-                    adapter = ChatAdapter(this, updatedModelArrayList!!)
+                    adapter = ChatAdapter(this, updatedModelArrayList!!,category)
                     recyclerView!!.adapter = adapter
 
                     recyclerView!!.invalidate()
@@ -286,7 +288,7 @@ class Chatbox:AppCompatActivity(){
                 params.put("username", username)
                 params.put("dateandtime", dateandtime)
                 params.put("picurl", commentedpic)
-                params.put("category", "Team")
+                params.put("category", category)
                 return params
             }
         }
@@ -300,6 +302,7 @@ class Chatbox:AppCompatActivity(){
         val usernames=intent.getStringArrayListExtra("usernames")
         val commentposts=intent.getStringArrayListExtra("messages")
         val dateandtimes=intent.getStringArrayListExtra("dateandtimes")
+        val category=intent.getStringExtra("category")
         val categories=intent.getStringArrayListExtra("categories")
 
         val list = ArrayList<Chatdata>()
@@ -311,6 +314,7 @@ class Chatbox:AppCompatActivity(){
         usernames.add(username)
         commentposts.add(commentpost)
         dateandtimes.add(dateandtime.split("/","")[1])
+        categories.add(category)
         val size=commentposts.size
 
         while (i < size) {
@@ -319,6 +323,7 @@ class Chatbox:AppCompatActivity(){
             imageModel.setTs(dateandtimes[i].split("\\/","")[1])
             imageModel.setComments(commentposts[i])
             imageModel.set_affiliation_icon(myImageList[0])
+            imageModel.set_cat(categories[i])
             list.add(imageModel)
             i++
         }
@@ -330,7 +335,7 @@ class Chatbox:AppCompatActivity(){
         val usernames=intent.getStringArrayListExtra("usernames")
         val commentposts=intent.getStringArrayListExtra("messages")
         val dateandtimes=intent.getStringArrayListExtra("dateandtimes")
-        val categories=intent.getStringArrayListExtra("categories")
+        val category=intent.getStringExtra("category")
 
         val list = ArrayList<Chatdata>()
 
@@ -349,6 +354,7 @@ class Chatbox:AppCompatActivity(){
             imageModel.setTs(dateandtimes[i])
             imageModel.setComments(commentposts[i])
             imageModel.set_affiliation_icon(myImageList[0])
+            imageModel.set_cat(category)
             list.add(imageModel)
             i++
         }

@@ -71,7 +71,41 @@ class LoginActivity:AppCompatActivity(){
         Picasso.get().load("https://dot10tech.com/mobileApp/assets/stafflogin.png").placeholder(R.drawable.progress_animation).into(employee)
         Picasso.get().load("https://dot10tech.com/mobileApp/assets/adminlogin.png").placeholder(R.drawable.progress_animation).into(admin)
         client.setOnClickListener {
+            val credsArray = usercredsTarget.replace("[", "").replace("]", "").replace("\"", "").split(",")
+            val usernames = ArrayList<String>()
+            val passwords = ArrayList<String>()
+            val category = ArrayList<String>()
+
+
+            var i = 0
+            var j = 2
+            var k = 1
+
+
+            Log.d("size", "" + credsArray.size)
+            val size = credsArray.size
+            while (i < size) {
+                val un = credsArray[i]
+                usernames.add(un)
+                i += 3
+
+            }
+            while (k < size) {
+                val pw = credsArray[k]
+                passwords.add(pw)
+                k += 3
+            }
+            while (j < size) {
+                val pw = credsArray[j]
+                category.add(pw)
+                j += 3
+            }
+
+
             val intent=Intent(this,LoginScreen::class.java)
+            intent.putExtra("usernames", usernames)
+            intent.putExtra("passwords", passwords)
+            intent.putExtra("category", category)
             intent.putExtra("flag",0)
             startActivity(intent)
         }

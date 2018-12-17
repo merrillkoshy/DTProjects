@@ -182,9 +182,11 @@ class MainActivity : AppCompatActivity() {
                 clientImageUrl.add(pw)
                 k += 2
             }
-
+            val fn=intent.getStringExtra("fn")
+            val ln=intent.getStringExtra("ln")
             val intent=Intent(this, OngoingProjects()::class.java)
-
+            intent.putExtra("fn",fn)
+            intent.putExtra("ln",ln)
             intent.putExtra("cN", clientName)
             intent.putExtra("ciU", clientImageUrl)
             startActivity(intent)

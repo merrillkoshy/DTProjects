@@ -9,7 +9,11 @@ import android.widget.*
 import com.squareup.picasso.Picasso
 import dot10tech.com.dot10projects.R
 
-class ChatAdapter(ctx: Context, private val imageModelArrayList: ArrayList<Chatdata>) : RecyclerView.Adapter<ChatAdapter.MyViewHolder>() {
+class ChatAdapter(
+    ctx: Context,
+    private val imageModelArrayList: ArrayList<Chatdata>,
+    private val category: String
+) : RecyclerView.Adapter<ChatAdapter.MyViewHolder>() {
 
     private val inflater: LayoutInflater
 
@@ -33,7 +37,17 @@ class ChatAdapter(ctx: Context, private val imageModelArrayList: ArrayList<Chatd
             placeholder(R.drawable.progress_animation).
             into(holder.iv)
 
-            holder.postername.setText(imageModelArrayList[position].getNames())
+        if (imageModelArrayList[position].get_cat()=="Admin"){
+            holder.badge.visibility=View.VISIBLE
+            Picasso.get().load(R.drawable.badge_admin).into(holder.badge)
+        }
+        else if (imageModelArrayList[position].get_cat()=="Team"){
+            holder.badge.visibility=View.GONE
+        }
+        else if (imageModelArrayList[position].get_cat()=="Client"){
+            holder.badge.visibility=View.GONE
+        }
+            holder.postername.setText(imageModelArrayList[position].getNames()+" : "+imageModelArrayList[position].get_cat())
 
         if(!imageModelArrayList[position].getComments().contains("https:")) {
             holder.message.visibility=View.VISIBLE
@@ -61,6 +75,7 @@ class ChatAdapter(ctx: Context, private val imageModelArrayList: ArrayList<Chatd
         var postername: TextView
         var iv: ImageView
         var cp:ImageView
+        var badge:ImageView
 
         init {
 
@@ -69,6 +84,7 @@ class ChatAdapter(ctx: Context, private val imageModelArrayList: ArrayList<Chatd
             time = itemView.findViewById(R.id.timestamp) as TextView
             iv = itemView.findViewById(R.id.iv) as ImageView
             cp=itemView.findViewById(R.id.commentpic) as ImageView
+            badge=itemView.findViewById(R.id.badge) as ImageView
         }
 
     }

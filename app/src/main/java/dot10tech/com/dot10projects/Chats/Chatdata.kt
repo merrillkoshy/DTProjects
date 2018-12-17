@@ -5,6 +5,7 @@ class Chatdata {
     var name: String? = null
     var comment: String? = null
     var srcurl: String? = null
+    var cat: String? = null
     var times: String? = null
     var picurl: String? = null
 
@@ -45,6 +46,13 @@ class Chatdata {
 
     fun set_affiliation_icon(srcurl: String) {
         this.srcurl = srcurl
+    }
+    fun get_cat(): String {
+        return cat.toString()
+    }
+
+    fun set_cat(cat: String) {
+        this.cat = cat
     }
 
 }

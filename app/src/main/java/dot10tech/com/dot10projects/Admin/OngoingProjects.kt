@@ -32,10 +32,11 @@ class OngoingProjects:AppCompatActivity(){
             i++
         }
 
+        val username=intent.getStringExtra("fn")+" "+intent.getStringExtra("ln")
         setContentView(R.layout.activity_ongoingprojects)
         val viewPagr:ViewPager=findViewById(R.id.inside_pager)
         val indicator: IndefinitePagerIndicator =findViewById(R.id.pager_indicator)
-        pagerAdapter= ImageAdapter(this, clientImageUrls, clientNames, "view", "")
+        pagerAdapter= ImageAdapter(this, clientImageUrls, clientNames, "view", username)
         viewPagr.adapter = pagerAdapter
         indicator.attachToViewPager(viewPagr)
 

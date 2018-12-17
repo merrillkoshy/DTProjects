@@ -47,7 +47,8 @@
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ClientActivity"/>
+        <activity android:name=".ClientActivity"
+                  android:theme="@style/Theme.Transparent"/>
         <activity
                 android:name=".LoginActivity"
                 android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"/>
@@ -87,8 +88,7 @@
         <activity android:name=".Chats.Chatbox"/>
         <activity android:name=".Chats.Cam"/>
         <activity android:name="Cam"/>
-        <activity android:name=".Chats.ChatComment"
-                  android:theme="@style/Theme.Transparent"/>
+
     </application>
 
 </manifest>

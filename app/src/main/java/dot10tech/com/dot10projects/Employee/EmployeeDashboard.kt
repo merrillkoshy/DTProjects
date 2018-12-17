@@ -227,6 +227,7 @@ class EmployeeDashboard:AppCompatActivity(), GestureDetector.OnGestureListener{
             startchatbox.putExtra("messages",messages)
             startchatbox.putExtra("dateandtimes",dateandtimes)
             startchatbox.putExtra("categories",categories)
+            startchatbox.putExtra("category","Team")
             startchatbox.putExtra("username",username)
             startchatbox.putExtra("message",commentpost)
             startchatbox.putExtra("dateandtime",dateandtime)

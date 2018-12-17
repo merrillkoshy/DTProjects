@@ -258,6 +258,7 @@ class ImageAdapter(
                     intent.putStringArrayListExtra("staffAssignment",staffassignmentforExport)
                     intent.putStringArrayListExtra("staffAffiliation",staffaffiliationforExport)
 
+                    intent.putExtra("username",username)
                     intent.putExtra("ciU", imageUrl)
                     intent.putExtra("cN",clientName[flag])
                     intent.putExtra("sd",startDate[flag])
