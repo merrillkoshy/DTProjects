@@ -1,120 +1,121 @@
 package dot10tech.com.dot10projects.Chats
 
-import android.app.AlertDialog
-import android.os.Build
-import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.RecyclerView
 import android.util.Log
-import android.widget.EditText
-import android.widget.Toast
-import com.android.volley.AuthFailureError
-import com.android.volley.Request
-import com.android.volley.Response
-import com.android.volley.VolleyError
-import com.android.volley.toolbox.StringRequest
-import dot10tech.com.dot10projects.Networking.VolleySingleton
 import dot10tech.com.dot10projects.R
-import dot10tech.com.dot10projects.UI.EndPoints
-import org.json.JSONException
-import org.json.JSONObject
-import java.text.SimpleDateFormat
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
+import dot10tech.com.dot10projects.R.id.cbox
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.OkHttpClient
+
+import java.io.IOException
+
 import java.util.*
 
-class ChatComment:AppCompatActivity() {
+var target= String()
+var commentposts=ArrayList<String>()
+var usernames=ArrayList<String>()
+val messages = ArrayList<String>()
+val dateandtimes = ArrayList<String>()
+val categories = ArrayList<String>()
+private val myImageList = arrayOf("https://dot10tech.com/mobileApp/assets/appicon.png")
+private var imageModelArrayList: ArrayList<Chatdata>? = null
 
-    private var commentpost= String()
-    private var dateandtime= String()
-    private var username= String()
-    private var commentedpic= String()
+class ChatComment{
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val builder = AlertDialog.Builder(this@ChatComment)
+    fun fetchJson() {
+        val url = "https://dot10tech.com/mobileapp/scripts/chats/viewChat.php"
 
-        username=intent.getStringExtra("username")
-        // Set the alert dialog title
-        builder.setTitle("Comment")
-        builder.setIcon(R.drawable.ic_menu_send)
-        val inflater = layoutInflater
-        val dialogLayout = inflater.inflate(R.layout.post_a_comment, null)
-        val editText  = dialogLayout.findViewById<EditText>(R.id.etComments)
-        builder.setView(dialogLayout)
+        val client = OkHttpClient()
+        val request = okhttp3.Request.Builder().url(url).build()
 
+        client.newCall(request).enqueue(object : Callback {
+            override fun onResponse(call: Call, response: okhttp3.Response) {
+                val body = response.body()?.string()
 
-        // Display a message on alert dialog
-        builder.setMessage("Post a comment")
-
-        // Set a positive button and its click listener on alert dialog
-
-        builder.setPositiveButton("SEND"){dialog, which ->
-
-
-            commentpost = editText.text.toString().trim()
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val current = LocalTime.now().toString()
-                val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss")
-                dateandtime = current.format(formatter)
-            } else {
-                var date = Date();
-                val formatter = SimpleDateFormat("MMM dd yyyy/HH:mma")
-                dateandtime = formatter.format(date)
+                //Slicing the response
+                target = body.toString()
+                startslice()
 
             }
-            Log.d("comment", commentpost)
-            Log.d("date and time", dateandtime)
-            if(commentpost!=""){addMessage()}
 
-        }
+            override fun onFailure(call: Call, e: IOException) {
+                println("Failed to execute request")
+            }
+        })
 
-
-
-        // Display a neutral button on alert dialog
-        builder.setNeutralButton("Cancel"){_,_ ->
-            Toast.makeText(applicationContext,"You cancelled the dialog.", Toast.LENGTH_SHORT).show()
-        }
-
-        // Finally, make the alert dialog using builder
-        val dialog: AlertDialog = builder.create()
-
-        // Display the alert dialog on app interface
-        dialog.show()
     }
 
-    fun addMessage(){
-        val stringRequest = object : StringRequest(Request.Method.POST, EndPoints.ADDNEWCHAT, Response.Listener<String>{
-                response ->
-            try {
-                val obj = JSONObject(response)
-                Toast.makeText(applicationContext, obj.getString("output"), Toast.LENGTH_SHORT).show()
+    fun startslice(){
+        val clientArray = target.replace("[", "").replace("]", "").replace("\"", "").split(",")
+
+        Log.d("commentpostsize",""+clientArray.size)
+        Log.d("target",""+target[0])
+        var i = 0
+        var j = 1
+        var k = 2
+        var l = 3
 
 
-            }catch (e: JSONException){
-                e.printStackTrace()
-            }
 
-        }, object : Response.ErrorListener{
-            override fun onErrorResponse(volleyError: VolleyError) {
-                Toast.makeText(applicationContext, volleyError.message, Toast.LENGTH_LONG).show()
-            }
-        }){
-            @Throws(AuthFailureError::class)
-            override fun getParams(): Map<String, String> {
-                val params = HashMap<String, String>()
 
-                params.put("message", commentpost)
-                params.put("username", username)
-                params.put("dateandtime", dateandtime)
-                params.put("picurl", commentedpic)
-                params.put("category", "Team")
-                return params
-            }
+        Log.d("size", "" + clientArray.size)
+        val size = clientArray.size
+        while (i < size) {
+            val un = clientArray[i]
+            usernames.add(un)
+            i += 4
+
         }
-        VolleySingleton.instance?.addToRequestQueue(stringRequest)
-        finish()
+
+        while (j < size) {
+            val pw = clientArray[j]
+            messages.add(pw)
+            j += 4
+        }
+        commentposts=messages
+        while (k < size) {
+            val pw = clientArray[k]
+            dateandtimes.add(pw)
+            k += 4
+        }
+        while (l < size) {
+            val pw = clientArray[l]
+            categories.add(pw)
+            l += 4
+        }
+
+
     }
 
+
+    fun recycleupdate(): ArrayList<Chatdata>? {
+        fetchJson()
+        imageModelArrayList = populateList()
+        return imageModelArrayList
+    }
+
+
+    private fun populateList(): ArrayList<Chatdata> {
+
+
+
+        val list = ArrayList<Chatdata>()
+
+
+        var i=0
+        while (i < commentposts.size) {
+            val imageModel = Chatdata()
+            imageModel.setNames(usernames[i])
+            imageModel.setTs(dateandtimes[i])
+            imageModel.setComments(commentposts[i])
+            imageModel.set_affiliation_icon(myImageList[0])
+            list.add(imageModel)
+            i++
+        }
+
+        return list
+    }
 
 
 }

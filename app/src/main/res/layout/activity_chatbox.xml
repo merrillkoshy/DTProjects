@@ -25,22 +25,32 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-    <Button
+    <EditText
             android:id="@+id/chatcomment"
-            android:gravity="center"
+            android:gravity="start"
+            android:layout_marginStart="12dp"
             android:layout_gravity="bottom"
-            android:layout_width="200dp"
-            android:text="COMMENT"
-            android:drawableLeft="@drawable/ic_menu_send"
+            android:layout_width="280dp"
+            android:hint="  Type message ..."
+            android:textColorHint="@color/white"
+            android:textColor="@color/white"
             android:layout_height="?actionBarSize"/>
+
+        <Button
+                android:id="@+id/chatcom"
+                android:gravity="start"
+                android:layout_gravity="bottom"
+                android:layout_width="50dp"
+                android:drawableStart="@drawable/ic_menu_send"
+                android:layout_height="?actionBarSize"/>
+
 
     <Button
             android:id="@+id/chatpic"
-            android:gravity="center"
+            android:gravity="start"
             android:layout_gravity="bottom"
-            android:layout_width="200dp"
+            android:layout_width="50dp"
             android:drawableStart="@drawable/ic_menu_camera"
-            android:text="POST A PICTURE"
             android:layout_height="?actionBarSize"/>
     </LinearLayout>
 

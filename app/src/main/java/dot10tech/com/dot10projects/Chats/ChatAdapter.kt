@@ -39,7 +39,7 @@ class ChatAdapter(ctx: Context, private val imageModelArrayList: ArrayList<Chatd
             holder.message.visibility=View.VISIBLE
             holder.message.setText(imageModelArrayList[position].getComments())
         }
-        holder.time.setText(imageModelArrayList[position].getTs().split("\\/")[1])
+        holder.time.setText(imageModelArrayList[position].getTs())
 
         if(imageModelArrayList[position].
                 getComments().contains("https:")) {
