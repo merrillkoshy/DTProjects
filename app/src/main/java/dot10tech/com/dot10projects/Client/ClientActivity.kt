@@ -1,4 +1,4 @@
-package dot10tech.com.dot10projects
+package dot10tech.com.dot10projects.Client
 
 import android.content.Intent
 import android.graphics.Color
@@ -10,6 +10,7 @@ import android.view.GestureDetector
 import android.view.MotionEvent
 import com.squareup.picasso.Picasso
 import dot10tech.com.dot10projects.Chats.Chatbox
+import dot10tech.com.dot10projects.R
 import kotlinx.android.synthetic.main.activity_clientdetail.*
 import okhttp3.Call
 import okhttp3.Callback
@@ -147,9 +148,11 @@ class ClientActivity:AppCompatActivity(),GestureDetector.OnGestureListener{
             val clientName=intent.getStringExtra("cN")
             username=intent.getStringExtra("cN")
             category="Admin"
+            val imageUrl=intent.getStringExtra("ciU").replace("\\","")
+
             val startchatbox= Intent(this, Chatbox::class.java)
 
-
+            startchatbox.putExtra("affliation_icon",imageUrl)
             startchatbox.putExtra("clientname",clientName)
             startchatbox.putExtra("usernames",usernames)
             startchatbox.putExtra("messages",messages)

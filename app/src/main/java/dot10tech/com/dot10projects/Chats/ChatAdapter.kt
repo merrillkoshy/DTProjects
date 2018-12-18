@@ -1,7 +1,9 @@
 package dot10tech.com.dot10projects.Chats
 
 import android.content.Context
+import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,8 +48,13 @@ class ChatAdapter(
         }
         else if (imageModelArrayList[position].get_cat()=="Client"){
             holder.badge.visibility=View.GONE
+            Picasso.get().load(category).
+                placeholder(R.drawable.progress_animation).
+                into(holder.iv)
         }
             holder.postername.setText(imageModelArrayList[position].getNames()+" : "+imageModelArrayList[position].get_cat())
+
+
 
         if(!imageModelArrayList[position].getComments().contains("https:")) {
             holder.message.visibility=View.VISIBLE
@@ -61,6 +68,17 @@ class ChatAdapter(
             Picasso.get().load(
                 imageModelArrayList[position].getComments().replace("\\","")
             ).placeholder(R.drawable.progress_animation).into(holder.cp)
+            holder.cp.setOnClickListener {
+                holder.image_modal.visibility=View.VISIBLE
+                Picasso.get().
+                    load(imageModelArrayList[position].getComments().replace("\\",""))
+                    .placeholder(R.drawable.progress_animation).
+                        into(holder.modal_image)
+            }
+
+            holder.closeBtn.setOnClickListener {
+                holder.image_modal.visibility=View.GONE
+            }
         }
     }
 
@@ -76,6 +94,9 @@ class ChatAdapter(
         var iv: ImageView
         var cp:ImageView
         var badge:ImageView
+        var closeBtn:Button
+        var modal_image:ImageView
+        var image_modal:CardView
 
         init {
 
@@ -85,6 +106,11 @@ class ChatAdapter(
             iv = itemView.findViewById(R.id.iv) as ImageView
             cp=itemView.findViewById(R.id.commentpic) as ImageView
             badge=itemView.findViewById(R.id.badge) as ImageView
+            image_modal=itemView.findViewById(R.id.image_Modal) as CardView
+            modal_image=itemView.findViewById(R.id.modal_image)as ImageView
+            closeBtn=itemView.findViewById(R.id.close_btn)as Button
+
+
         }
 
     }

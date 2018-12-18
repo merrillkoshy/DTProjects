@@ -22,8 +22,8 @@ class EmployeeActivity:AppCompatActivity(){
         val clientNames=intent.getStringArrayListExtra("cN")
         val clientImageUrls=intent.getStringArrayListExtra("ciU")
         val username=intent.getStringExtra("username")
-
-        pagerAdapter= ImageAdapter(this,clientImageUrls,clientNames,"workon",username)
+        val category=intent.getStringExtra("category")
+        pagerAdapter= ImageAdapter(this,clientImageUrls,clientNames,"workon",username,category)
         viewPagr.adapter = pagerAdapter
         indicator.attachToViewPager(viewPagr)
 

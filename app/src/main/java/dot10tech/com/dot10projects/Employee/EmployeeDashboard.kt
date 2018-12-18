@@ -219,9 +219,10 @@ class EmployeeDashboard:AppCompatActivity(), GestureDetector.OnGestureListener{
             }
 
             val clientName=intent.getStringExtra("cN")
+            val imageUrl=intent.getStringExtra("ciU").replace("\\","")
             val startchatbox=Intent(this, Chatbox::class.java)
 
-
+            startchatbox.putExtra("affliation_icon",imageUrl)
             startchatbox.putExtra("clientname",clientName)
             startchatbox.putExtra("usernames",usernames)
             startchatbox.putExtra("messages",messages)

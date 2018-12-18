@@ -27,7 +27,8 @@ class ImageAdapter(
     private val imageList: ArrayList<String>,
     private val clientList: ArrayList<String>,
     private val intention: String,
-    private val username: String
+    private val username: String,
+    private val category: String
 ) : PagerAdapter() {
 
     private val TAG = this.javaClass.simpleName
@@ -258,6 +259,8 @@ class ImageAdapter(
                     intent.putStringArrayListExtra("staffAssignment",staffassignmentforExport)
                     intent.putStringArrayListExtra("staffAffiliation",staffaffiliationforExport)
 
+
+                    intent.putExtra("category",category)
                     intent.putExtra("username",username)
                     intent.putExtra("ciU", imageUrl)
                     intent.putExtra("cN",clientName[flag])

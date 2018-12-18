@@ -6,6 +6,11 @@
         android:background="@drawable/background"
      android:layout_width="match_parent"
      android:layout_height="match_parent">
+    <ImageView
+            android:visibility="gone"
+            android:id="@+id/uploadtest"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
 <android.support.v7.widget.RecyclerView
         android:id="@+id/cbox"

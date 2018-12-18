@@ -5,9 +5,11 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.media.MediaScannerConnection
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.os.StrictMode
 import android.provider.MediaStore
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -23,12 +25,14 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
+import com.squareup.picasso.Picasso
 
 import dot10tech.com.dot10projects.MainActivity
 import dot10tech.com.dot10projects.Networking.VolleySingleton
 import dot10tech.com.dot10projects.R
 import dot10tech.com.dot10projects.UI.EndPoints
 import dot10tech.com.dot10projects.UI.UploadObject
+import id.zelory.compressor.Compressor
 import kotlinx.android.synthetic.main.activity_chatbox.*
 
 import okhttp3.MediaType
@@ -63,6 +67,8 @@ class Chatbox:AppCompatActivity(){
     private var username= String()
     private var commentedpic= String()
     private var category= String()
+    var image: Uri? = null
+    var mCameraFileName: String? = null
 
     private val CAMERA = 2
 
@@ -74,7 +80,10 @@ class Chatbox:AppCompatActivity(){
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
 
-        category=intent.getStringExtra("category")
+        val builder =  StrictMode.VmPolicy.Builder()
+            StrictMode.setVmPolicy(builder.build())
+
+        category=intent.getStringExtra("affliation_icon")
 
         chatcom.setOnClickListener {
 
@@ -99,6 +108,18 @@ class Chatbox:AppCompatActivity(){
 
             chatpic.setOnClickListener {
                 val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                val date = Date()
+
+                val df = SimpleDateFormat("mm-ss")
+
+                val newPicFile = df.format(date) + ".jpg"
+                val outPath = "/sdcard/"+ IMAGE_DIRECTORY+"/$newPicFile"
+                val outFile = File(outPath)
+
+                mCameraFileName = outFile.toString()
+                val outuri = Uri.fromFile(outFile)
+
+                intent.putExtra(MediaStore.EXTRA_OUTPUT,outuri)
                 startActivityForResult(intent, CAMERA)
             }
 
@@ -140,8 +161,20 @@ class Chatbox:AppCompatActivity(){
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        val thumbnail = data!!.extras!!.get("data") as Bitmap
-        saveImage(thumbnail)
+        if (data != null) {
+            image = data.getData()
+        }
+        val file = File(mCameraFileName)
+        if (!file.exists()) {
+            file.mkdir()}
+        Picasso.get().load(file).placeholder(R.drawable.progress_animation).into(uploadtest)
+        uploadtest.visibility=View.VISIBLE
+
+        val compressedImageFile = Compressor(this).compressToFile(file);
+        uploadFile(compressedImageFile)
+
+        /*val thumbnail = data!!.extras!!.get("data") as Bitmap
+        saveImage(thumbnail)*/
         Toast.makeText(this@Chatbox, "Image Saved!", Toast.LENGTH_SHORT).show()
 
         if(commentedpic!=""){
@@ -156,12 +189,13 @@ class Chatbox:AppCompatActivity(){
 
             }
         }
+
         username=intent.getStringExtra("username")
 
 
     }
 
-    fun saveImage(myBitmap: Bitmap):String {
+/*    fun saveImage(myBitmap: Bitmap):String {
         val bytes = ByteArrayOutputStream()
         myBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
         val wallpaperDirectory = File(
@@ -197,7 +231,7 @@ class Chatbox:AppCompatActivity(){
 
 
         return ""
-    }
+    }*/
 
     private fun uploadFile(f: File) {
         if(EasyPermissions.hasPermissions(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
@@ -237,7 +271,7 @@ class Chatbox:AppCompatActivity(){
                     adapter = ChatAdapter(this@Chatbox, updatedModelArrayList!!, category)
                     recyclerView!!.adapter = adapter
 
-                    recyclerView!!.invalidate()
+
                     recyclerView!!.layoutManager = LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
                     recyclerView!!.scrollToPosition(updatedModelArrayList!!.size-1)
                     addMessage(2)
@@ -265,7 +299,7 @@ class Chatbox:AppCompatActivity(){
                     adapter = ChatAdapter(this, updatedModelArrayList!!,category)
                     recyclerView!!.adapter = adapter
 
-                    recyclerView!!.invalidate()
+
                     recyclerView!!.layoutManager =
                             LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
                     recyclerView!!.scrollToPosition(updatedModelArrayList!!.size - 1)
@@ -336,6 +370,7 @@ class Chatbox:AppCompatActivity(){
         val commentposts=intent.getStringArrayListExtra("messages")
         val dateandtimes=intent.getStringArrayListExtra("dateandtimes")
         val category=intent.getStringExtra("category")
+        val categories=intent.getStringArrayListExtra("categories")
 
         val list = ArrayList<Chatdata>()
 
@@ -343,9 +378,11 @@ class Chatbox:AppCompatActivity(){
         var i=0
 
 
+
         usernames.add(username)
         commentposts.add(commentedpic)
         dateandtimes.add(dateandtime)
+        categories.add(category)
         val size=commentposts.size
 
         while (i < size) {
@@ -354,7 +391,7 @@ class Chatbox:AppCompatActivity(){
             imageModel.setTs(dateandtimes[i])
             imageModel.setComments(commentposts[i])
             imageModel.set_affiliation_icon(myImageList[0])
-            imageModel.set_cat(category)
+            imageModel.set_cat(categories[i])
             list.add(imageModel)
             i++
         }
@@ -382,6 +419,7 @@ class Chatbox:AppCompatActivity(){
             imageModel.setTs(dateandtimes[i])
             imageModel.setComments(commentposts[i])
             imageModel.set_affiliation_icon(myImageList[0])
+            imageModel.set_cat(categories[i])
             list.add(imageModel)
             i++
         }

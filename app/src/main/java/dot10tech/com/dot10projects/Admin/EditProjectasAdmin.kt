@@ -26,7 +26,7 @@ class EditProjectasAdmin : AppCompatActivity() {
         setContentView(R.layout.activity_editasadmin)
         val viewPagr: ViewPager =findViewById(R.id.inside_pager)
         val indicator: IndefinitePagerIndicator =findViewById(R.id.pager_indicator)
-        pagerAdapter= ImageAdapter(this, clientImageUrls, clientNames, "edit", "")
+        pagerAdapter= ImageAdapter(this, clientImageUrls, clientNames, "edit", "", intent.getStringExtra("category"))
         viewPagr.adapter = pagerAdapter
         indicator.attachToViewPager(viewPagr)
 

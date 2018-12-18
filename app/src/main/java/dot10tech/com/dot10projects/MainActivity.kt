@@ -155,7 +155,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             val intent=Intent(this, EditProjectasAdmin()::class.java)
-
+            intent.putExtra("category","Admin")
             intent.putExtra("cN", clientName)
             intent.putExtra("ciU", clientImageUrl)
             startActivity(intent)
@@ -185,6 +185,7 @@ class MainActivity : AppCompatActivity() {
             val fn=intent.getStringExtra("fn")
             val ln=intent.getStringExtra("ln")
             val intent=Intent(this, OngoingProjects()::class.java)
+            intent.putExtra("category","Admin")
             intent.putExtra("fn",fn)
             intent.putExtra("ln",ln)
             intent.putExtra("cN", clientName)

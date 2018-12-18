@@ -9,6 +9,7 @@
                 android:paddingTop="16dp"
                 tools:context=".MainActivity">
 
+
 <android.support.v7.widget.CardView
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/card_view"
@@ -92,4 +93,29 @@
     </LinearLayout>
 
 </android.support.v7.widget.CardView>
+    <android.support.v7.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/image_Modal"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="0dp"
+            card_view:cardCornerRadius="4dp">
+        <ImageView
+                android:background="@drawable/progressbg"
+                android:layout_margin="10dp"
+                android:id="@+id/modal_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        <Button
+                android:id="@+id/close_btn"
+                android:layout_gravity="end"
+                android:translationZ="10dp"
+                android:background="@drawable/close_btn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"/>
+    </android.support.v7.widget.CardView>
 </RelativeLayout>

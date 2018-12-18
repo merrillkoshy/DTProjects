@@ -2,13 +2,12 @@ package dot10tech.com.dot10projects
 
 import android.app.AlertDialog
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.widget.Toast
 import com.squareup.picasso.Picasso
 import dot10tech.com.dot10projects.Admin.LoggedInAs
+import dot10tech.com.dot10projects.Client.ClientActivity
 import kotlinx.android.synthetic.main.activity_loginscreen.*
 import okhttp3.*
 import java.io.IOException
@@ -81,7 +80,7 @@ class LoginScreen:AppCompatActivity(){
         val flag=intent.getIntExtra("flag",3)
         title="Login"
         Picasso.get().load("https://dot10tech.com/mobileApp/assets/appicon.png").placeholder(R.drawable.progress_animation).into(masthead)
-        val clientintent=Intent(this,ClientActivity::class.java)
+        val clientintent=Intent(this, ClientActivity::class.java)
         val employeeintent=Intent(this,EmployeeActivity::class.java)
         val adminintent=Intent(this,LoggedInAs::class.java)
         Picasso.get().load("https://dot10tech.com/mobileApp/assets/loginbtn.png").placeholder(R.drawable.progress_animation).into(login)
@@ -274,7 +273,6 @@ class LoginScreen:AppCompatActivity(){
                 Log.d("match",match)
                 if (match=="passpass") {
                     val category=usercategory[pos]
-
 
                     if(category.toString().trim()!="Client") {
                         employeeintent.putExtra("username",adminUsernameFromDB[pos])
