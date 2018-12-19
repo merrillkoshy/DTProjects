@@ -5,9 +5,16 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.squareup.picasso.Picasso
 import dot10tech.com.dot10projects.Admin.LoggedInAs
 import dot10tech.com.dot10projects.Client.ClientActivity
+import dot10tech.com.dot10projects.DataLayer.UserCredentials
+import dot10tech.com.dot10projects.FirebaseData.AdminsDataClass
+import dot10tech.com.dot10projects.FirebaseData.UsersDataClass
 import kotlinx.android.synthetic.main.activity_loginscreen.*
 import okhttp3.*
 import java.io.IOException
@@ -24,6 +31,9 @@ class LoginScreen:AppCompatActivity(){
     val latestactivity = java.util.ArrayList<String>()
     val taskdeadline = java.util.ArrayList<String>()
     val taskstatus = java.util.ArrayList<String>()
+
+     lateinit var usercredList:MutableList<UsersDataClass>
+     var admincredList=ArrayList<AdminsDataClass>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,6 +86,7 @@ class LoginScreen:AppCompatActivity(){
 
     }
     fun initialiseWidgets(){
+        usercredList= mutableListOf()
         setContentView(R.layout.activity_loginscreen)
         val flag=intent.getIntExtra("flag",3)
         title="Login"
@@ -92,106 +103,54 @@ class LoginScreen:AppCompatActivity(){
         val firstNameFromDB=intent.getStringArrayListExtra("firstName")
         val lastNameFromDB=intent.getStringArrayListExtra("lastName")
 
-        var j=0
-        while(j<adminUsernameFromDB.size)
-        {
-            Log.d("usernames",adminUsernameFromDB[j])
-            j++
-        }
 
+
+        val database= FirebaseDatabase.getInstance().getReference()
+        database.child("usercreds").orderByKey().limitToLast(1).addValueEventListener(object :ValueEventListener{
+
+            var i=0
+            override fun onDataChange(p0: DataSnapshot) {
+                for (h in p0.children)
+                {
+                    Log.d("analysis",""+h.getValue(UsersDataClass::class.java))
+                    val usercred=h.getValue(UsersDataClass::class.java)
+                }
+
+            }
+            override fun onCancelled(p0: DatabaseError) {
+                println(p0!!.message)
+            }
+
+        })
+
+        var i=0
+        Log.d("usercredsize",":  "+usercredList.size)
+
+        while(i<usercredList.size){
+            Log.d("usercredlist",":    "+usercredList[i])
+            Log.d("usercredlistinside",""+usercredList[i].username)
+            i++
+        }
 
 
         when(flag){
             0-> {
                 login.setOnClickListener {
 
-                    val ProjectArray = projecttarget.
-                        replace("[", "").
-                        replace("]", "").
-                        replace("\"", "").split(",")
-
-                    var a = 0
-                    var b = 1
-                    var l=2
-                    var m=3
-                    var o=4
-                    var p=5
-                    var q=6
-
-                    Log.d("size", "" + ProjectArray.size)
-                    val projectarraysize = ProjectArray.size
-                    while (a < projectarraysize) {
-                        val un = ProjectArray[a]
-                        clientNameArray.add(un)
-                        a += 7
-
-                    }
-                    while (b < projectarraysize) {
-                        val pw = ProjectArray[b]
-                        startDate.add(pw)
-                        b += 7
-                    }
-                    while (l < projectarraysize) {
-                        val pw = ProjectArray[l]
-                        deadline.add(pw)
-                        l += 7
-                    }
-                    while (m < projectarraysize) {
-
-                        val pw = ProjectArray[m]
-                        overallprogress.add(pw)
-                        m += 7
-                    }
-                    while (o < projectarraysize) {
-                        val pw = ProjectArray[o]
-                        latestactivity.add(pw)
-                        o += 7
-                    }
-                    while (p < projectarraysize) {
-                        val pw = ProjectArray[p]
-                        taskdeadline.add(pw)
-                        p += 7
-                    }
-                    while (q < projectarraysize) {
-                        val pw = ProjectArray[q]
-                        taskstatus.add(pw)
-                        q += 7
-                    }
-
-
-                    val clientArray = target.replace("[", "").replace("]", "").replace("\"", "").split(",")
-
-                    var d = 0
-                    var k = 1
-
-                    Log.d("size", "" + clientArray.size)
-                    val sizes = clientArray.size
-                    while (d < sizes) {
-                        val un = clientArray[d]
-                        clientName.add(un)
-                        d += 2
-
-                    }
-                    while (k < sizes) {
-                        val pw = clientArray[k]
-                        clientImageUrl.add(pw)
-                        k += 2
-                    }
-
-                    val size = adminUsernameFromDB.size
                     var i = 0
                     var match = "fail"
                     var pos = 0
                     var getP = ""
                     var name=""
 
-                    while (i < size) {
+                    while (i < usercredList.size) {
 
-                        if (adminUsernameFromDB[i].trim() == username.text.trim().toString()) {
+
+                        if (usercredList[i].username.toString().trim() == username.text.trim().toString()) {
                             match = "pass"
                             pos = i
-                            name=adminUsernameFromDB[i]
-                            getP = adminPasswordFromDB[i]
+                            name=usercredList[i].username.toString().trim()
+                            getP = usercredList[i].password.toString().trim()
                             break
                         }
                         i++
@@ -231,39 +190,21 @@ class LoginScreen:AppCompatActivity(){
             }
             1->{login.setOnClickListener {
 
-                val clientArray = target.replace("[", "").replace("]", "").replace("\"", "").split(",")
 
-                var a = 0
-                var k = 1
 
-                Log.d("size", "" + clientArray.size)
-                val sizes = clientArray.size
-                while (a < sizes) {
-                    val un = clientArray[a]
-                    clientName.add(un)
-                    a += 2
-
-                }
-                while (k < sizes) {
-                    val pw = clientArray[k]
-                    clientImageUrl.add(pw)
-                    k += 2
-                }
-
-                val size=adminUsernameFromDB.size
                 var i=0
                 var match="fail"
                 var pos=0
                 var getP=""
 
-                while(i<size)
+                while (i < usercredList.size)
                 {
 
                     if (adminUsernameFromDB[i].trim()==username.text.trim().toString())
                     {
                         match="pass"
                         pos=i
-                        getP=adminPasswordFromDB[i]
+                        getP=usercredList[i].password.toString().trim()
                         break
                     }
                     i++
@@ -308,20 +249,36 @@ class LoginScreen:AppCompatActivity(){
 
             }
             2->{login.setOnClickListener {
-                val size=adminUsernameFromDB.size
+                val database= FirebaseDatabase.getInstance().getReference("usercreds")
+                database.addValueEventListener(object :ValueEventListener{
+
+
+                    override fun onDataChange(p0: DataSnapshot) {
+
+                        if(p0!!.exists()){
+                            val admincreds=p0.getValue(AdminsDataClass::class.java)
+                            admincredList.add(admincreds!!)
+                        }
+                    }
+                    override fun onCancelled(p0: DatabaseError) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+
+                })
+
                 var i=0
                 var match="fail"
                 var pos=0
                 var getP=""
 
-                while(i<size)
+                while(i<admincredList.size)
                 {
 
-                    if (adminUsernameFromDB[i].trim()==username.text.trim().toString())
+                    if (admincredList[i].username[i]==username.text.trim().toString())
                     {
                         match="pass"
                         pos=i
-                        getP=adminPasswordFromDB[i]
+                        getP=admincredList[i].password[i]
                         break
                     }
                     i++

@@ -123,7 +123,8 @@ class Chatbox:AppCompatActivity(){
                 startActivityForResult(intent, CAMERA)
             }
 
-
+        val date=intent.getStringArrayListExtra("date")
+        Log.d("datesize",":"+date.size)
 
         recyclerView = findViewById(R.id.cbox) as RecyclerView
 
@@ -354,7 +355,7 @@ class Chatbox:AppCompatActivity(){
         while (i < size) {
             val imageModel = Chatdata()
             imageModel.setNames(usernames[i])
-            imageModel.setTs(dateandtimes[i].split("\\/","")[1])
+            imageModel.setTs(dateandtimes[i])
             imageModel.setComments(commentposts[i])
             imageModel.set_affiliation_icon(myImageList[0])
             imageModel.set_cat(categories[i])

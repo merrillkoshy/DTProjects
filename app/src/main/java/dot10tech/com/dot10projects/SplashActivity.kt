@@ -4,6 +4,8 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import dot10tech.com.dot10projects.DataLayer.AdminCredentials
+import dot10tech.com.dot10projects.DataLayer.UserCredentials
 
 
 class SplashActivity : AppCompatActivity() {
@@ -25,6 +27,8 @@ class SplashActivity : AppCompatActivity() {
 
         //Initialize the Handler
         mDelayHandler = Handler()
+        UserCredentials().fetchJson_UserCredTable()
+        AdminCredentials().fetchJson_CredTable()
 
         //Navigate with delay
         mDelayHandler!!.postDelayed(mRunnable, SPLASH_DELAY)

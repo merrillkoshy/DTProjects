@@ -34,52 +34,50 @@ class ChatAdapter(
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
-        Picasso.get().load(imageModelArrayList[position].
-            get_affiliation_icon()).
-            placeholder(R.drawable.progress_animation).
-            into(holder.iv)
+        Picasso.get().load(
+            imageModelArrayList[position].get_affiliation_icon()
+        ).placeholder(R.drawable.progress_animation).into(holder.iv)
 
-        if (imageModelArrayList[position].get_cat()=="Admin"){
-            holder.badge.visibility=View.VISIBLE
+        if (imageModelArrayList[position].get_cat() == "Admin") {
+            holder.badge.visibility = View.VISIBLE
             Picasso.get().load(R.drawable.badge_admin).into(holder.badge)
+        } else if (imageModelArrayList[position].get_cat() == "Team") {
+            holder.badge.visibility = View.GONE
+        } else if (imageModelArrayList[position].get_cat() == "Client") {
+            holder.badge.visibility = View.GONE
+            Picasso.get().load(category).placeholder(R.drawable.progress_animation).into(holder.iv)
         }
-        else if (imageModelArrayList[position].get_cat()=="Team"){
-            holder.badge.visibility=View.GONE
-        }
-        else if (imageModelArrayList[position].get_cat()=="Client"){
-            holder.badge.visibility=View.GONE
-            Picasso.get().load(category).
-                placeholder(R.drawable.progress_animation).
-                into(holder.iv)
-        }
-            holder.postername.setText(imageModelArrayList[position].getNames()+" : "+imageModelArrayList[position].get_cat())
+        holder.postername.setText(imageModelArrayList[position].getNames())
 
 
-
-        if(!imageModelArrayList[position].getComments().contains("https:")) {
-            holder.message.visibility=View.VISIBLE
+        if (!imageModelArrayList[position].getComments().contains("https:")) {
+            holder.message.visibility = View.VISIBLE
             holder.message.setText(imageModelArrayList[position].getComments())
+            holder.cp.visibility = View.GONE
         }
+
+        var ts=imageModelArrayList[position].getTs()
+        Log.d("ts",ts)
         holder.time.setText(imageModelArrayList[position].getTs())
 
-        if(imageModelArrayList[position].
-                getComments().contains("https:")) {
-            holder.cp.visibility=View.VISIBLE
-            Picasso.get().load(
-                imageModelArrayList[position].getComments().replace("\\","")
-            ).placeholder(R.drawable.progress_animation).into(holder.cp)
-            holder.cp.setOnClickListener {
-                holder.image_modal.visibility=View.VISIBLE
-                Picasso.get().
-                    load(imageModelArrayList[position].getComments().replace("\\",""))
-                    .placeholder(R.drawable.progress_animation).
-                        into(holder.modal_image)
+
+            if (imageModelArrayList[position].getComments().contains("https:")) {
+                holder.message.visibility = View.GONE
+                holder.cp.visibility = View.VISIBLE
+                Picasso.get().load(
+                    imageModelArrayList[position].getComments().replace("\\", "")
+                ).placeholder(R.drawable.progress_animation).into(holder.cp)
+                holder.cp.setOnClickListener {
+                    holder.image_modal.visibility = View.VISIBLE
+                    Picasso.get().load(imageModelArrayList[position].getComments().replace("\\", ""))
+                        .placeholder(R.drawable.progress_animation).into(holder.modal_image)
+                }
+
+                holder.closeBtn.setOnClickListener {
+                    holder.image_modal.visibility = View.GONE
+                }
             }
 
-            holder.closeBtn.setOnClickListener {
-                holder.image_modal.visibility=View.GONE
-            }
-        }
     }
 
     override fun getItemCount(): Int {
