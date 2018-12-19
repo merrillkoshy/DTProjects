@@ -83,7 +83,7 @@ class AdminCredentials{
         val allUsers: List<AdminsDataClass> = mutableListOf(
             AdminsDataClass(uid!!,usernames,passwords,profilePic,firstName,lastName) )
 
-        database.child(uid).setValue(allUsers)
+        database.setValue(allUsers)
 
     }
 }

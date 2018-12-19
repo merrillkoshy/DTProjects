@@ -5,10 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.*
 import com.squareup.picasso.Picasso
 import dot10tech.com.dot10projects.Admin.LoggedInAs
 import dot10tech.com.dot10projects.Client.ClientActivity
@@ -18,9 +15,10 @@ import dot10tech.com.dot10projects.FirebaseData.UsersDataClass
 import kotlinx.android.synthetic.main.activity_loginscreen.*
 import okhttp3.*
 import java.io.IOException
+import java.lang.reflect.Array
 
 class LoginScreen:AppCompatActivity(){
-    private var target = String()
+
     private var projecttarget= String()
     val clientName = ArrayList<String>()
     val clientImageUrl = ArrayList<String>()
@@ -33,36 +31,17 @@ class LoginScreen:AppCompatActivity(){
     val taskstatus = java.util.ArrayList<String>()
 
      lateinit var usercredList:MutableList<UsersDataClass>
+    lateinit var testcredlist:HashMap<String,String>
      var admincredList=ArrayList<AdminsDataClass>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        fetchJson()
+
         fetchProjectDetailsasJson()
         initialiseWidgets()
     }
 
-    fun fetchJson() {
-        val url = "https://dot10tech.com/mobileapp/scripts/clientDetailLoadApi.php"
 
-        val client = OkHttpClient()
-        val request = Request.Builder().url(url).build()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onResponse(call: Call, response: Response) {
-                val body = response.body()?.string()
-
-                //Slicing the response
-                target = body.toString()
-
-            }
-
-            override fun onFailure(call: Call, e: IOException) {
-                println("Failed to execute request")
-            }
-        })
-
-    }
 
     fun fetchProjectDetailsasJson(){
         val url = "https://dot10tech.com/mobileapp/scripts/viewProjectDetails.php"
@@ -105,23 +84,27 @@ class LoginScreen:AppCompatActivity(){
 
 
 
-        val database= FirebaseDatabase.getInstance().getReference()
-        database.child("usercreds").orderByKey().limitToLast(1).addValueEventListener(object :ValueEventListener{
-
-            var i=0
-            override fun onDataChange(p0: DataSnapshot) {
-                for (h in p0.children)
-                {
-                    Log.d("analysis",""+h.getValue(UsersDataClass::class.java))
-                    val usercred=h.getValue(UsersDataClass::class.java)
+        val database=FirebaseDatabase.getInstance().getReference()
+        database.child("usercreds").addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (user in dataSnapshot.children){
+                    Log.d("test", "Value is: ${user.value}")
+                    val usercred=dataSnapshot.child(0.toString()).getValue(UsersDataClass::class.java)
+                    usercredList.add(usercred!!)
                 }
-
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                val value = dataSnapshot.child(0.toString()).getValue(UsersDataClass::class.java)
+                Log.d("test2", "Value is: $value")
             }
-            override fun onCancelled(p0: DatabaseError) {
-                println(p0!!.message)
-            }
 
+            override fun onCancelled(error: DatabaseError) {
+                // Failed to read value
+                Log.w("test", "Failed to read value.", error.toException())
+            }
         })
+
+
 
         var i=0
         Log.d("usercredsize",":  "+usercredList.size)
@@ -200,11 +183,11 @@ class LoginScreen:AppCompatActivity(){
                 while (i < usercredList.size)
                 {
 
-                    if (adminUsernameFromDB[i].trim()==username.text.trim().toString())
+                    if (usercredList[i].username[i]==username.text.trim().toString())
                     {
                         match="pass"
                         pos=i
-                        getP=usercredList[i].password.toString().trim()
+                        getP=usercredList[i].password[i]
                         break
                     }
                     i++
@@ -213,10 +196,10 @@ class LoginScreen:AppCompatActivity(){
                     match+="pass"
                 Log.d("match",match)
                 if (match=="passpass") {
-                    val category=usercategory[pos]
+                    val category=usercredList[pos].password[pos]
 
                     if(category.toString().trim()!="Client") {
-                        employeeintent.putExtra("username",adminUsernameFromDB[pos])
+                        employeeintent.putExtra("username",usercredList[pos].username[pos])
                         employeeintent.putExtra("cN", clientName)
                         employeeintent.putExtra("ciU", clientImageUrl)
                         employeeintent.putExtra("category", category)

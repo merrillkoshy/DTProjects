@@ -68,6 +68,6 @@ class UserCredentials{
         val allUsers: List<UsersDataClass> = mutableListOf(
             UsersDataClass(uid!!,usernames,passwords,category) )
 
-        database.child(uid).setValue(allUsers)
+        database.setValue(allUsers)
     }
 }
