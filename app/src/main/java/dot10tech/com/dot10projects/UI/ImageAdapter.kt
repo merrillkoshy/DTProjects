@@ -13,11 +13,15 @@ import com.squareup.picasso.Picasso
 import dot10tech.com.dot10projects.R
 import java.util.ArrayList
 import android.app.Activity
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import dot10tech.com.dot10projects.Admin.ClientDetails.ClientDetailActivity
 import dot10tech.com.dot10projects.Admin.ClientDetails.EditClientDetail
-import dot10tech.com.dot10projects.Client.ClientDataClass
 import dot10tech.com.dot10projects.Employee.EmployeeDashboard
 import dot10tech.com.dot10projects.Employee.EmployeeDetails
+import dot10tech.com.dot10projects.FirebaseData.ProjectsDataClass
 import okhttp3.*
 import java.io.IOException
 
@@ -42,6 +46,7 @@ class ImageAdapter(
     val latestactivity = ArrayList<String>()
     val taskdeadline = ArrayList<String>()
     val taskstatus = ArrayList<String>()
+    lateinit var projectdetailsList:MutableList<ProjectsDataClass>
 
     private var targetEmp = String()
     val staffName = ArrayList<String>()
@@ -109,73 +114,42 @@ class ImageAdapter(
         fetchJson()
         fetchJsonEmp()
 
+
+        val database= FirebaseDatabase.getInstance().getReference()
+        database.child("projectdetails").addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (user in dataSnapshot.children){
+
+                    val project=dataSnapshot.child(0.toString()).getValue(ProjectsDataClass::class.java)
+                    projectdetailsList.add(project!!)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Failed to read value
+                Log.w("test", "Failed to read value.", error.toException())
+            }
+        })
+
+
         if(imageUrl=="NULL")
         {
             val strin: String = "https://diplomatssummit.com/mobile/hp_assets/placeholder.jpg"
             val pagerImageView = rootView.findViewById<ImageView>(R.id.iv)
-            Log.d("gPA_test", strin)
+
             Picasso.get().load(strin).centerCrop().fit().placeholder( R.drawable.progress_animation ).into(pagerImageView)
         }else {
+            projectdetailsList= mutableListOf()
             val pagerImageView = rootView.findViewById<ImageView>(R.id.iv)
-            Log.d("gPA_test", imageUrl)
+
             Picasso.get().load(imageUrl).centerCrop().fit().placeholder( R.drawable.progress_animation ).into(pagerImageView)
             if(intention=="view"){
                 pagerImageView.setOnClickListener{
-                    val ProjectArray = target.
-                        replace("[", "").
-                        replace("]", "").
-                        replace("\"", "").split(",")
 
-                    var i = 0
-                    var k = 1
-                    var l=2
-                    var m=3
-                    var o=4
-                    var p=5
-                    var q=6
 
-                    Log.d("size", "" + ProjectArray.size)
-                    val size = ProjectArray.size
-                    while (i < size) {
-                        val un = ProjectArray[i]
-                        clientName.add(un)
-                        i += 7
-
-                    }
-                    while (k < size) {
-                        val pw = ProjectArray[k]
-                        startDate.add(pw)
-                        k += 7
-                    }
-                    while (l < size) {
-                        val pw = ProjectArray[l]
-                        deadline.add(pw)
-                        l += 7
-                    }
-                    while (m < size) {
-
-                        val pw = ProjectArray[m]
-                        overallprogress.add(pw)
-                        m += 7
-                    }
-                    while (o < size) {
-                        val pw = ProjectArray[o]
-                        latestactivity.add(pw)
-                        o += 7
-                    }
-                    while (p < size) {
-                        val pw = ProjectArray[p]
-                        taskdeadline.add(pw)
-                        p += 7
-                    }
-                    while (q < size) {
-                        val pw = ProjectArray[q]
-                        taskstatus.add(pw)
-                        q += 7
-                    }
 
                     var n=0
-                    while(n<clientName.size)
+                    while(n<projectdetailsList[0].clientName.size)
                     {
                         Log.d(clientList[n],client)
                         if(clientList[n].toString().trim()==client.toString().trim())
@@ -189,13 +163,13 @@ class ImageAdapter(
 
 
 
-
                     val clientArray = targetEmp.replace("[", "").replace("]", "").replace("\"", "").split(",")
 
                     var a = 0
                     var b = 1
                     var c = 2
                     var d = 3
+
 
                     Log.d("size", "" + clientArray.size)
                     val arrsize = clientArray.size
@@ -263,170 +237,110 @@ class ImageAdapter(
                     intent.putExtra("category",category)
                     intent.putExtra("username",username)
                     intent.putExtra("ciU", imageUrl)
-                    intent.putExtra("cN",clientName[flag])
-                    intent.putExtra("sd",startDate[flag])
-                    intent.putExtra("dl",deadline[flag])
-                    intent.putExtra("op",overallprogress[flag])
-                    intent.putExtra("la",latestactivity[flag])
-                    intent.putExtra("td",taskdeadline[flag])
-                    intent.putExtra("ts",taskstatus[flag])
+                    intent.putExtra("cN",projectdetailsList[0].clientName[flag])
+                    intent.putExtra("sd",projectdetailsList[0].startDate[flag])
+                    intent.putExtra("dl",projectdetailsList[0].deadLine[flag])
+                    intent.putExtra("op",projectdetailsList[0].overallProgress[flag])
+                    intent.putExtra("la",projectdetailsList[0].latestActivity[flag])
+                    intent.putExtra("td",projectdetailsList[0].taskDeadline[flag])
+                    intent.putExtra("ts",projectdetailsList[0].taskStatus[flag])
                     mContext.startActivity(intent)
                     (mContext as Activity).overridePendingTransition(R.anim.animation_leave, R.anim.animation_enter)
+
+
                 }
             }
             else if(intention=="workon"){
                 pagerImageView.setOnClickListener{
 
-                    val ProjectArray = target.
-                        replace("[", "").
-                        replace("]", "").
-                        replace("\"", "").split(",")
+                    val database= FirebaseDatabase.getInstance().getReference()
+                    database.child("projectdetails").addValueEventListener(object : ValueEventListener {
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                            for (user in dataSnapshot.children){
+                                Log.d("test", "Value is: ${user.value}")
+                                val project=dataSnapshot.child(0.toString()).getValue(ProjectsDataClass::class.java)
+                                projectdetailsList.add(project!!)
 
-                    var i = 0
-                    var k = 1
-                    var l=2
-                    var m=3
-                    var o=4
-                    var p=5
-                    var q=6
+                                var n=0
+                                while(n<projectdetailsList[0].clientName.size)
+                                {
+                                    Log.d(clientList[n],client)
+                                    if(projectdetailsList[0].clientName[n].toString().trim()==client.toString().trim())
+                                    {
+                                        flag=n
+                                        break
+                                    }
+                                    n++
+                                }
 
-                    Log.d("size", "" + ProjectArray.size)
-                    val size = ProjectArray.size
-                    while (i < size) {
-                        val un = ProjectArray[i]
-                        clientName.add(un)
-                        i += 7
+                                pagerImageView.startAnimation(animateOnSelect)
+                                val intent= Intent(mContext, EmployeeDashboard::class.java )
 
-                    }
-                    while (k < size) {
-                        val pw = ProjectArray[k]
-                        startDate.add(pw)
-                        k += 7
-                    }
-                    while (l < size) {
-                        val pw = ProjectArray[l]
-                        deadline.add(pw)
-                        l += 7
-                    }
-                    while (m < size) {
-                        val pw = ProjectArray[m]
-                        overallprogress.add(pw)
-                        m += 7
-                    }
-                    while (o < size) {
-                        val pw = ProjectArray[o]
-                        latestactivity.add(pw)
-                        o += 7
-                    }
-                    while (p < size) {
-                        val pw = ProjectArray[p]
-                        taskdeadline.add(pw)
-                        p += 7
-                    }
-                    while (q < size) {
-                        val pw = ProjectArray[q]
-                        taskstatus.add(pw)
-                        q += 7
-                    }
+                                intent.putExtra("ciU", imageUrl)
+                                intent.putExtra("username",username)
+                                intent.putExtra("cN",projectdetailsList[0].clientName[flag])
+                                intent.putExtra("sd",projectdetailsList[0].startDate[flag])
+                                intent.putExtra("dl",projectdetailsList[0].deadLine[flag])
+                                intent.putExtra("op",projectdetailsList[0].overallProgress[flag])
+                                intent.putExtra("la",projectdetailsList[0].latestActivity[flag])
+                                intent.putExtra("td",projectdetailsList[0].taskDeadline[flag])
+                                intent.putExtra("ts",projectdetailsList[0].taskStatus[flag])
 
-                    var n=0
-                    while(n<clientName.size)
-                    {   if(clientList[n]==client)
-                        flag=n
-                        n++
-                    }
 
-                    pagerImageView.startAnimation(animateOnSelect)
-                    val intent= Intent(mContext, EmployeeDashboard::class.java )
+                                mContext.startActivity(intent)
+                                (mContext as Activity).overridePendingTransition(R.anim.animation_leave, R.anim.animation_enter)
+                            }
+                        }
 
-                    intent.putExtra("ciU", imageUrl)
-                    intent.putExtra("username",username)
-                    intent.putExtra("cN",clientName[flag])
-                    intent.putExtra("sd",startDate[flag])
-                    intent.putExtra("dl",deadline[flag])
-                    intent.putExtra("op",overallprogress[flag])
-                    intent.putExtra("la",latestactivity[flag])
-                    intent.putExtra("td",taskdeadline[flag])
-                    intent.putExtra("ts",taskstatus[flag])
+                        override fun onCancelled(error: DatabaseError) {
+                            // Failed to read value
+                            Log.w("test", "Failed to read value.", error.toException())
+                        }
+                    })
 
-                    val dataclassclient= ClientDataClass()
-                    dataclassclient.setNames(clientName[flag])
 
-                    mContext.startActivity(intent)
-                    (mContext as Activity).overridePendingTransition(R.anim.animation_leave, R.anim.animation_enter)
                 }
             }
             else if(intention=="edit"){
                 pagerImageView.setOnClickListener{
 
-                    val ProjectArray = target.
-                        replace("[", "").
-                        replace("]", "").
-                        replace("\"", "").split(",")
+                    val database= FirebaseDatabase.getInstance().getReference()
+                    database.child("projectdetails").addValueEventListener(object : ValueEventListener {
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                            for (user in dataSnapshot.children){
+                                Log.d("test", "Value is: ${user.value}")
+                                val project=dataSnapshot.child(0.toString()).getValue(ProjectsDataClass::class.java)
+                                projectdetailsList.add(project!!)
+                            }
+                        }
 
-                    var i = 0
-                    var k = 1
-                    var l=2
-                    var m=3
-                    var o=4
-                    var p=5
-                    var q=6
-
-                    Log.d("size", "" + ProjectArray.size)
-                    val size = ProjectArray.size
-                    while (i < size) {
-                        val un = ProjectArray[i]
-                        clientName.add(un)
-                        i += 7
-
-                    }
-                    while (k < size) {
-                        val pw = ProjectArray[k]
-                        startDate.add(pw)
-                        k += 7
-                    }
-                    while (l < size) {
-                        val pw = ProjectArray[l]
-                        deadline.add(pw)
-                        l += 7
-                    }
-                    while (m < size) {
-                        val pw = ProjectArray[m]
-                        overallprogress.add(pw)
-                        m += 7
-                    }
-                    while (o < size) {
-                        val pw = ProjectArray[o]
-                        latestactivity.add(pw)
-                        o += 7
-                    }
-                    while (p < size) {
-                        val pw = ProjectArray[p]
-                        taskdeadline.add(pw)
-                        p += 7
-                    }
-                    while (q < size) {
-                        val pw = ProjectArray[q]
-                        taskstatus.add(pw)
-                        q += 7
-                    }
+                        override fun onCancelled(error: DatabaseError) {
+                            // Failed to read value
+                            Log.w("test", "Failed to read value.", error.toException())
+                        }
+                    })
 
                     var n=0
-                    while(n<clientName.size)
-                    {   if(clientList[n]==client)
-                        flag=n
+                    while(n<projectdetailsList[0].clientName.size)
+                    {
+                        Log.d(clientList[n],client)
+                        if(projectdetailsList[0].clientName[n].toString().trim()==client.toString().trim())
+                        {
+                            flag=n
+                            break
+                        }
                         n++
                     }
 
                     pagerImageView.startAnimation(animateOnSelect)
                     val intent= Intent(mContext, EditClientDetail::class.java )
-                    intent.putExtra("cN",clientName[flag])
-                    intent.putExtra("sd",startDate[flag])
-                    intent.putExtra("dl",deadline[flag])
-                    intent.putExtra("op",overallprogress[flag])
-                    intent.putExtra("la",latestactivity[flag])
-                    intent.putExtra("td",taskdeadline[flag])
-                    intent.putExtra("ts",taskstatus[flag])
+                    intent.putExtra("cN",projectdetailsList[0].clientName[flag])
+                    intent.putExtra("sd",projectdetailsList[0].startDate[flag])
+                    intent.putExtra("dl",projectdetailsList[0].deadLine[flag])
+                    intent.putExtra("op",projectdetailsList[0].overallProgress[flag])
+                    intent.putExtra("la",projectdetailsList[0].latestActivity[flag])
+                    intent.putExtra("td",projectdetailsList[0].taskDeadline[flag])
+                    intent.putExtra("ts",projectdetailsList[0].taskStatus[flag])
                     mContext.startActivity(intent)
                     (mContext as Activity).overridePendingTransition(R.anim.animation_leave, R.anim.animation_enter)
                 }

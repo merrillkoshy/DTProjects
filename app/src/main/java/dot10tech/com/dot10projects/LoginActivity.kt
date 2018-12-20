@@ -50,7 +50,6 @@ class LoginActivity:AppCompatActivity(){
         val adminScreen=findViewById<ImageView>(R.id.admin)
         adminScreen.setOnClickListener {
 
-
             val intent=Intent(this,LoginScreen::class.java)
             intent.putExtra("flag",2)
             startActivity(intent)

@@ -2,8 +2,7 @@ package dot10tech.com.dot10projects.DataLayer
 
 import android.util.Log
 import com.google.firebase.database.FirebaseDatabase
-import dot10tech.com.dot10projects.FirebaseData.ClientsDetailsData
-import dot10tech.com.dot10projects.FirebaseData.UsersDataClass
+import dot10tech.com.dot10projects.FirebaseData.ClientsDetailsDataClass
 import okhttp3.*
 import java.io.IOException
 
@@ -12,6 +11,7 @@ val clientName = ArrayList<String>()
 val clientImageUrl = ArrayList<String>()
 
 class ClientDetails{
+
     fun fetchJson() {
         val url = "https://dot10tech.com/mobileapp/scripts/clientDetailLoadApi.php"
 
@@ -58,11 +58,13 @@ class ClientDetails{
         val database= FirebaseDatabase.getInstance().getReference("clientDetailsData")
         val uid =database.push().key
 
-        val allUsers: List<ClientsDetailsData> = mutableListOf(
-            ClientsDetailsData(uid!!, clientName, clientImageUrl) )
+        val allUsers: List<ClientsDetailsDataClass> = mutableListOf(
+            ClientsDetailsDataClass(uid!!, clientName, clientImageUrl) )
 
         database.setValue(allUsers)
 
 
     }
+
+
 }

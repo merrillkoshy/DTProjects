@@ -18,22 +18,23 @@ import com.squareup.picasso.Picasso
 import dot10tech.com.dot10projects.Admin.AddNewProjectasAdmin
 import dot10tech.com.dot10projects.Admin.BurgerMenu.AddorRemoveUser
 import dot10tech.com.dot10projects.Admin.BurgerMenu.Profile
-import dot10tech.com.dot10projects.Admin.ClientDetails.ClientDetailsData
 import dot10tech.com.dot10projects.Admin.EditProjectasAdmin
 import dot10tech.com.dot10projects.Admin.OngoingProjects
-import dot10tech.com.dot10projects.FirebaseData.UsersDataClass
+import dot10tech.com.dot10projects.FirebaseData.ClientsDetailsDataClass
+
 import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.android.synthetic.main.toolbar.*
 import okhttp3.*
 import java.io.IOException
 
-lateinit var clientdetailsLoad:MutableList<ClientDetailsData>
-val clientName = ArrayList<String>()
-val clientImageUrl = ArrayList<String>()
+
+
 
 class MainActivity : AppCompatActivity() {
-    private var target = String()
 
+    lateinit var clientdetailsLoad:MutableList<ClientsDetailsDataClass>
+    val clientName = ArrayList<String>()
+    val clientImageUrl = ArrayList<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,13 +91,13 @@ class MainActivity : AppCompatActivity() {
 
 
     fun mainPageAction(){
-
+        clientdetailsLoad= mutableListOf()
         val database= FirebaseDatabase.getInstance().getReference()
         database.child("clientDetailsData").addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 for (user in dataSnapshot.children){
                     Log.d("test", "Value is: ${user.value}")
-                    val clientdeets=dataSnapshot.child(0.toString()).getValue(ClientDetailsData::class.java)
+                    val clientdeets=dataSnapshot.child(0.toString()).getValue(ClientsDetailsDataClass::class.java)
                     clientdetailsLoad.add(clientdeets!!)
                 }
 
@@ -116,8 +117,8 @@ class MainActivity : AppCompatActivity() {
 
             val intent=Intent(this, AddNewProjectasAdmin()::class.java)
 
-            intent.putExtra("cN", clientName)
-            intent.putExtra("ciU", clientImageUrl)
+            intent.putExtra("cN", clientdetailsLoad[0].clientName)
+            intent.putExtra("ciU", clientdetailsLoad[0].clientImageUrl)
             startActivity(intent)
         }
 
@@ -127,8 +128,8 @@ class MainActivity : AppCompatActivity() {
 
             val intent=Intent(this, EditProjectasAdmin()::class.java)
             intent.putExtra("category","Admin")
-            intent.putExtra("cN", clientName)
-            intent.putExtra("ciU", clientImageUrl)
+            intent.putExtra("cN", clientdetailsLoad[0].clientName)
+            intent.putExtra("ciU", clientdetailsLoad[0].clientImageUrl)
             startActivity(intent)
 
         }
@@ -136,14 +137,16 @@ class MainActivity : AppCompatActivity() {
         Picasso.get().load("https://www.dot10tech.com/mobileapp/assets/ongoing.png").placeholder(R.drawable.progress_animation).into(onGoingProjects)
         onGoingProjects.setOnClickListener {
 
+
+
             val fn=intent.getStringExtra("fn")
             val ln=intent.getStringExtra("ln")
             val intent=Intent(this, OngoingProjects()::class.java)
             intent.putExtra("category","Admin")
             intent.putExtra("fn",fn)
             intent.putExtra("ln",ln)
-            intent.putExtra("cN", clientName)
-            intent.putExtra("ciU", clientImageUrl)
+            intent.putExtra("cN", clientdetailsLoad[0].clientName)
+            intent.putExtra("ciU", clientdetailsLoad[0].clientImageUrl)
             startActivity(intent)
         }
     }
