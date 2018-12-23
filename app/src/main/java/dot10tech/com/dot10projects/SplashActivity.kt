@@ -6,10 +6,7 @@ import android.os.Bundle
 import android.os.Handler
 import com.google.firebase.database.FirebaseDatabase
 import dot10tech.com.dot10projects.Admin.ClientDetails.ClientDetailActivity
-import dot10tech.com.dot10projects.DataLayer.AdminCredentials
-import dot10tech.com.dot10projects.DataLayer.ClientDetails
-import dot10tech.com.dot10projects.DataLayer.ProjectDetails
-import dot10tech.com.dot10projects.DataLayer.UserCredentials
+import dot10tech.com.dot10projects.DataLayer.*
 
 
 class SplashActivity : AppCompatActivity() {
@@ -36,6 +33,7 @@ class SplashActivity : AppCompatActivity() {
         AdminCredentials().fetchJson_CredTable()
         ClientDetails().fetchJson()
         ProjectDetails().fetchProjectDetailsasJson()
+        TeamAssignmentDetails().fetchJsonEmp()
 
         //Navigate with delay
         mDelayHandler!!.postDelayed(mRunnable, SPLASH_DELAY)

@@ -20,6 +20,8 @@ val taskstatus = ArrayList<String>()
 
 class ProjectDetails{
 
+    var uid=String()
+
     fun fetchProjectDetailsasJson(){
         val url = "https://dot10tech.com/mobileapp/scripts/viewProjectDetails.php"
 
@@ -97,10 +99,10 @@ class ProjectDetails{
         }
 
         val database= FirebaseDatabase.getInstance().getReference("projectdetails")
-        val uid =database.push().key
+        uid =database.push().key!!
 
         val allUsers: List<ProjectsDataClass> = mutableListOf(
-            ProjectsDataClass(uid!!, projectOfClientName, startDate, deadline, overallprogress,
+            ProjectsDataClass(uid, projectOfClientName, startDate, deadline, overallprogress,
                 latestactivity, taskdeadline, taskstatus) )
 
         database.setValue(allUsers)

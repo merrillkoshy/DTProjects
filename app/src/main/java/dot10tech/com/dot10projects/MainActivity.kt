@@ -137,8 +137,6 @@ class MainActivity : AppCompatActivity() {
         Picasso.get().load("https://www.dot10tech.com/mobileapp/assets/ongoing.png").placeholder(R.drawable.progress_animation).into(onGoingProjects)
         onGoingProjects.setOnClickListener {
 
-
-
             val fn=intent.getStringExtra("fn")
             val ln=intent.getStringExtra("ln")
             val intent=Intent(this, OngoingProjects()::class.java)
@@ -148,6 +146,7 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra("cN", clientdetailsLoad[0].clientName)
             intent.putExtra("ciU", clientdetailsLoad[0].clientImageUrl)
             startActivity(intent)
+
         }
     }
 

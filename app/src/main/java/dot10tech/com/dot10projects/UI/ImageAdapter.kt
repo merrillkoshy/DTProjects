@@ -22,6 +22,7 @@ import dot10tech.com.dot10projects.Admin.ClientDetails.EditClientDetail
 import dot10tech.com.dot10projects.Employee.EmployeeDashboard
 import dot10tech.com.dot10projects.Employee.EmployeeDetails
 import dot10tech.com.dot10projects.FirebaseData.ProjectsDataClass
+import dot10tech.com.dot10projects.FirebaseData.TeamAssignmentDataClass
 import okhttp3.*
 import java.io.IOException
 
@@ -38,7 +39,7 @@ class ImageAdapter(
     private val TAG = this.javaClass.simpleName
     private val slideno: Int = 0
 
-    private var target = String()
+
     val clientName = ArrayList<String>()
     val startDate = ArrayList<String>()
     val deadline = ArrayList<String>()
@@ -47,8 +48,9 @@ class ImageAdapter(
     val taskdeadline = ArrayList<String>()
     val taskstatus = ArrayList<String>()
     lateinit var projectdetailsList:MutableList<ProjectsDataClass>
+    lateinit var teamAssignmentsList:MutableList<TeamAssignmentDataClass>
 
-    private var targetEmp = String()
+
     val staffName = ArrayList<String>()
     val staffAssignment = ArrayList<String>()
     val workingProject = ArrayList<String>()
@@ -61,48 +63,8 @@ class ImageAdapter(
         return imageList.size
     }
 
-    fun fetchJsonEmp(){
-        val url = "https://dot10tech.com/mobileapp/scripts/teamAssignmentView.php"
 
-        val client = OkHttpClient()
-        val request = Request.Builder().url(url).build()
 
-        client.newCall(request).enqueue(object : Callback {
-            override fun onResponse(call: Call, response: Response) {
-                val body = response.body()?.string()
-
-                //Slicing the response
-                targetEmp = body.toString()
-
-            }
-
-            override fun onFailure(call: Call, e: IOException) {
-                println("Failed to execute request")
-            }
-        })
-    }
-
-    fun fetchJson(){
-        val url = "https://dot10tech.com/mobileapp/scripts/viewProjectDetails.php"
-
-        val client = OkHttpClient()
-        val request = Request.Builder().url(url).build()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onResponse(call: Call, response: Response) {
-                val body = response.body()?.string()
-
-                //Slicing the response
-                target = body.toString()
-
-            }
-
-            override fun onFailure(call: Call, e: IOException) {
-                println("Failed to execute request")
-            }
-        })
-
-    }
 
     override fun instantiateItem(viewGroup: ViewGroup, position: Int): Any {
 
@@ -111,15 +73,31 @@ class ImageAdapter(
         val animateOnSelect=AnimationUtils.loadAnimation(mContext,R.anim.animate_on_select)
         val imageUrl = imageList[position]
         val client=clientList[position]
-        fetchJson()
-        fetchJsonEmp()
+
+
+        val teamDB=FirebaseDatabase.getInstance().getReference()
+        teamDB.child("teamassignment").addValueEventListener(object:ValueEventListener{
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (user in dataSnapshot.children){
+
+                    Log.d("team", "Value is: ${user.value}")
+                    val teamAssignment=dataSnapshot.child(0.toString()).getValue(TeamAssignmentDataClass::class.java)
+                    teamAssignmentsList.add(teamAssignment!!)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Failed to read value
+                Log.w("test", "Failed to read value.", error.toException())
+            }
+        })
 
 
         val database= FirebaseDatabase.getInstance().getReference()
         database.child("projectdetails").addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 for (user in dataSnapshot.children){
-
+                    Log.d("project", "Value is: ${user.value}")
                     val project=dataSnapshot.child(0.toString()).getValue(ProjectsDataClass::class.java)
                     projectdetailsList.add(project!!)
                 }
@@ -140,13 +118,13 @@ class ImageAdapter(
             Picasso.get().load(strin).centerCrop().fit().placeholder( R.drawable.progress_animation ).into(pagerImageView)
         }else {
             projectdetailsList= mutableListOf()
+            teamAssignmentsList= mutableListOf()
             val pagerImageView = rootView.findViewById<ImageView>(R.id.iv)
 
             Picasso.get().load(imageUrl).centerCrop().fit().placeholder( R.drawable.progress_animation ).into(pagerImageView)
             if(intention=="view"){
+
                 pagerImageView.setOnClickListener{
-
-
 
                     var n=0
                     while(n<projectdetailsList[0].clientName.size)
@@ -161,47 +139,14 @@ class ImageAdapter(
                     }
 
 
-
-
-                    val clientArray = targetEmp.replace("[", "").replace("]", "").replace("\"", "").split(",")
-
-                    var a = 0
-                    var b = 1
-                    var c = 2
-                    var d = 3
-
-
-                    Log.d("size", "" + clientArray.size)
-                    val arrsize = clientArray.size
-                    while (a < arrsize) {
-                        val un = clientArray[a]
-                        staffName.add(un)
-                        a += 4
-
-                    }
-                    while (b < arrsize) {
-                        val pw = clientArray[b]
-                        staffAssignment.add(pw)
-                        b += 4
-                    }
-                    while (c < arrsize) {
-                        val pw = clientArray[c]
-                        Log.d("workingproject",pw)
-                        workingProject.add(pw)
-                        c += 4
-                    }
-                    while (d < arrsize) {
-                        val pw = clientArray[d]
-                        affiliation.add(pw)
-                        d += 4
-                    }
+                   val teamAssignment=teamAssignmentsList[0]
 
                     var e=0
                     val indexlist=ArrayList<String>()
 
-                    while(e<workingProject.size)
+                    while(e<teamAssignment.workingProject.size)
                     {
-                        if(workingProject[e]==client)
+                        if(teamAssignment.workingProject[e]==client)
                         {
                             indexlist.add(e.toString())
                         }
@@ -216,9 +161,9 @@ class ImageAdapter(
 
                     while (f<indexlist.size)
                     {
-                        staffnameforExport.add(staffName[indexlist[f].toInt()])
-                        staffassignmentforExport.add(staffAssignment[indexlist[f].toInt()])
-                        staffaffiliationforExport.add(affiliation[indexlist[f].toInt()])
+                        staffnameforExport.add(teamAssignment.staffName[indexlist[f].toInt()])
+                        staffassignmentforExport.add(teamAssignment.staffAssignment[indexlist[f].toInt()])
+                        staffaffiliationforExport.add(teamAssignment.affiliation[indexlist[f].toInt()])
                         f++
                     }
 
@@ -320,6 +265,25 @@ class ImageAdapter(
                         }
                     })
 
+                    val teamDB=FirebaseDatabase.getInstance().getReference()
+                    teamDB.child("teamassignment").addValueEventListener(object:ValueEventListener{
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                            for (user in dataSnapshot.children){
+
+                                Log.d("team", "Value is: ${user.value}")
+                                val teamAssignment=dataSnapshot.child(0.toString()).getValue(TeamAssignmentDataClass::class.java)
+                                teamAssignmentsList.add(teamAssignment!!)
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            // Failed to read value
+                            Log.w("test", "Failed to read value.", error.toException())
+                        }
+                    })
+
+
+
                     var n=0
                     while(n<projectdetailsList[0].clientName.size)
                     {
@@ -332,8 +296,42 @@ class ImageAdapter(
                         n++
                     }
 
+                    val teamAssignment=teamAssignmentsList[0]
+
+                    var e=0
+                    val indexlist=ArrayList<String>()
+
+                    while(e<teamAssignment.workingProject.size)
+                    {
+                        if(teamAssignment.workingProject[e]==client)
+                        {
+                            indexlist.add(e.toString())
+                        }
+                        e++
+                    }
+
+                    var f=0
+
+                    val staffnameforExport=ArrayList<String>()
+                    val staffassignmentforExport=ArrayList<String>()
+                    val staffaffiliationforExport=ArrayList<String>()
+
+                    while (f<indexlist.size)
+                    {
+                        staffnameforExport.add(teamAssignment.staffName[indexlist[f].toInt()])
+                        staffassignmentforExport.add(teamAssignment.staffAssignment[indexlist[f].toInt()])
+                        staffaffiliationforExport.add(teamAssignment.affiliation[indexlist[f].toInt()])
+                        f++
+                    }
+
+
                     pagerImageView.startAnimation(animateOnSelect)
                     val intent= Intent(mContext, EditClientDetail::class.java )
+
+                    intent.putStringArrayListExtra("staffName",staffnameforExport)
+                    intent.putStringArrayListExtra("staffAssignment",staffassignmentforExport)
+                    intent.putStringArrayListExtra("staffAffiliation",staffaffiliationforExport)
+
                     intent.putExtra("cN",projectdetailsList[0].clientName[flag])
                     intent.putExtra("sd",projectdetailsList[0].startDate[flag])
                     intent.putExtra("dl",projectdetailsList[0].deadLine[flag])
@@ -341,6 +339,7 @@ class ImageAdapter(
                     intent.putExtra("la",projectdetailsList[0].latestActivity[flag])
                     intent.putExtra("td",projectdetailsList[0].taskDeadline[flag])
                     intent.putExtra("ts",projectdetailsList[0].taskStatus[flag])
+                    intent.putExtra("flag",flag)
                     mContext.startActivity(intent)
                     (mContext as Activity).overridePendingTransition(R.anim.animation_leave, R.anim.animation_enter)
                 }

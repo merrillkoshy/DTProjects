@@ -23,7 +23,14 @@ import org.json.JSONObject
 
 import android.view.ViewGroup
 import android.view.ViewParent
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import dot10tech.com.dot10projects.DataLayer.ProjectDetails
+import dot10tech.com.dot10projects.DataLayer.projectOfClientName
 import dot10tech.com.dot10projects.Employee.EditTeamActivity
+import dot10tech.com.dot10projects.FirebaseData.ProjectsDataClass
 import kotlinx.android.synthetic.main.activity_editteam.*
 import okhttp3.Call
 import okhttp3.Callback
@@ -39,12 +46,14 @@ class EditClientDetail:AppCompatActivity(){
     val staffAssignment = ArrayList<String>()
     val workingProject = ArrayList<String>()
     val affiliation = ArrayList<String>()
+    lateinit var updatableChild:HashMap<String,Any>
+    lateinit var projectdetailsList:MutableList<ProjectsDataClass>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        updatableChild= hashMapOf()
         setContentView(R.layout.activity_editclientdetail)
-
+        loadTray()
 
         val startDate=intent.getStringExtra("sd")
         val deadline=intent.getStringExtra("dl")
@@ -93,71 +102,40 @@ class EditClientDetail:AppCompatActivity(){
         updatebtn.setOnClickListener { addActivity() }
     }
 
-    fun optiontabs(){
-        val clientArray = targetEmp.replace("[", "").replace("]", "").replace("\"", "").split(",")
+    fun loadTray(){
+        projectdetailsList= mutableListOf()
 
-        var a = 0
-        var b = 1
-        var c = 2
-        var d = 3
 
-        Log.d("size", "" + clientArray.size)
-        val arrsize = clientArray.size
-        while (a < arrsize) {
-            val un = clientArray[a]
-            staffName.add(un)
-            a += 4
 
-        }
-        while (b < arrsize) {
-            val pw = clientArray[b]
-            staffAssignment.add(pw)
-            b += 4
-        }
-        while (c < arrsize) {
-            val pw = clientArray[c]
-            Log.d("workingproject",pw)
-            workingProject.add(pw)
-            c += 4
-        }
-        while (d < arrsize) {
-            val pw = clientArray[d]
-            affiliation.add(pw)
-            d += 4
-        }
+        val database= FirebaseDatabase.getInstance().getReference()
+        database.child("projectdetails"). addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (user in dataSnapshot.children){
 
-        var e=0
-        val indexlist= ArrayList<String>()
-
-        while(e<workingProject.size)
-        {
-            if(workingProject[e]==intent.getStringExtra("cN"))
-            {
-                indexlist.add(e.toString())
+                    val project=dataSnapshot.child(0.toString()).getValue(ProjectsDataClass::class.java)
+                    projectdetailsList.add(project!!)
+                }
             }
-            e++
-        }
 
-        var f=0
+            override fun onCancelled(error: DatabaseError) {
+                // Failed to read value
+                Log.w("test", "Failed to read value.", error.toException())
+            }
+        })
+    }
 
-        val staffnameforExport= ArrayList<String>()
-        val staffassignmentforExport= ArrayList<String>()
-        val staffaffiliationforExport= ArrayList<String>()
+    fun optiontabs(){
 
-        while (f<indexlist.size)
-        {
-            staffnameforExport.add(staffName[indexlist[f].toInt()])
-            staffassignmentforExport.add(staffAssignment[indexlist[f].toInt()])
-            staffaffiliationforExport.add(affiliation[indexlist[f].toInt()])
-            f++
-        }
 
         editTeamTab.setOnClickListener {
+            val staffName=intent.getStringArrayListExtra("staffName")
+            val staffAssignment=intent.getStringArrayListExtra("staffAssignment")
+            val staffAffiliation=intent.getStringArrayListExtra("staffAffiliation")
 
             val intent:Intent= Intent(this,EditTeamActivity::class.java)
-            intent.putStringArrayListExtra("staffName",staffnameforExport)
-            intent.putStringArrayListExtra("staffAssignment",staffassignmentforExport)
-            intent.putStringArrayListExtra("staffAffiliation",staffaffiliationforExport)
+            intent.putStringArrayListExtra("staffName",staffName)
+            intent.putStringArrayListExtra("staffAssignment",staffAssignment)
+            intent.putStringArrayListExtra("staffAffiliation",staffAffiliation)
             startActivity(intent)
 
         }
@@ -193,6 +171,7 @@ class EditClientDetail:AppCompatActivity(){
     }
 
        private fun addActivity() {
+
            val startDate=intent.getStringExtra("sd")
            val deadline=intent.getStringExtra("dl")
            val overallprogress=intent.getStringExtra("op")
@@ -229,6 +208,8 @@ class EditClientDetail:AppCompatActivity(){
            if (gettaskStatus=="")
            {gettaskStatus=taskstatus}
 
+           val selectedclientIndex=intent.getIntExtra("flag",99)
+
        if(getClientName==intent.getStringExtra("cN")
        &&   getStartDate==startDate
        &&   getDeadline==deadline
@@ -246,6 +227,45 @@ class EditClientDetail:AppCompatActivity(){
                try {
                    val obj = JSONObject(response)
                    Toast.makeText(applicationContext, obj.getString("message"), Toast.LENGTH_SHORT).show()
+
+                   val database= FirebaseDatabase.getInstance().getReference("projectdetails").child("0")
+
+                   /*fetch all updates*/
+
+                   projectdetailsList[0].clientName[selectedclientIndex]=getClientName
+                   projectdetailsList[0].startDate[selectedclientIndex]=getStartDate
+                   projectdetailsList[0].deadLine[selectedclientIndex]=getDeadline
+                   projectdetailsList[0].latestActivity[selectedclientIndex]=getlatestActivity
+                   projectdetailsList[0].taskDeadline[selectedclientIndex]=gettaskDeadline
+                   projectdetailsList[0].taskStatus[selectedclientIndex]=gettaskStatus
+                   projectdetailsList[0].overallProgress[selectedclientIndex]=getoverallProgress
+
+
+                   /*package with change*/
+
+                   val toUpdateClientname=projectdetailsList[0].clientName
+                   val toUpdateStartDate=projectdetailsList[0].startDate
+                   val toUpdateDeadline=projectdetailsList[0].deadLine
+                   val toUpdateLatestActivity=projectdetailsList[0].latestActivity
+                   val toUpdateTaskDeadline=projectdetailsList[0].taskDeadline
+                   val toUpdateTaskStatus=projectdetailsList[0].taskStatus
+                   val toUpdateOverallProgress=projectdetailsList[0].overallProgress
+
+
+                   /*put those in table*/
+
+                   updatableChild.put("clientName", toUpdateClientname)
+                   updatableChild.put("startDate", toUpdateStartDate)
+                   updatableChild.put("deadLine", toUpdateDeadline)
+                   updatableChild.put("latestActivity", toUpdateLatestActivity)
+                   updatableChild.put("taskDeadline", toUpdateTaskDeadline)
+                   updatableChild.put("taskStatus", toUpdateTaskStatus)
+                   updatableChild.put("overallProgress", toUpdateOverallProgress)
+
+
+                   /*update in database*/
+
+                   database.updateChildren(updatableChild)
 
                    val intent= Intent(this,MainActivity::class.java)
                    startActivity(intent)

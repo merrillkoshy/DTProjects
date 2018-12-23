@@ -17,6 +17,7 @@ class OngoingProjects:AppCompatActivity(){
         super.onCreate(savedInstanceState)
 
         initialiseWidgets()
+
     }
 
 
@@ -36,6 +37,7 @@ class OngoingProjects:AppCompatActivity(){
         setContentView(R.layout.activity_ongoingprojects)
         val viewPagr:ViewPager=findViewById(R.id.inside_pager)
         val indicator: IndefinitePagerIndicator =findViewById(R.id.pager_indicator)
+
         pagerAdapter= ImageAdapter(this, clientImageUrls, clientNames, "view", username, intent.getStringExtra("category"))
         viewPagr.adapter = pagerAdapter
         indicator.attachToViewPager(viewPagr)

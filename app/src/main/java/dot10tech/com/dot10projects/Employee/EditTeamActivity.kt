@@ -8,31 +8,77 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
+import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.toolbox.StringRequest
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import dot10tech.com.dot10projects.FirebaseData.ProjectsDataClass
+
+import dot10tech.com.dot10projects.FirebaseData.TeamAssignmentDataClass
 import dot10tech.com.dot10projects.R
+import dot10tech.com.dot10projects.UI.EndPoints
+
+
 import kotlinx.android.synthetic.main.activity_editteam.*
+import org.json.JSONObject
 
 class EditTeamActivity:AppCompatActivity(){
-
+    var staffNameArray= ArrayList<String>()
+    var staffAssignment= ArrayList<String>()
+    var staffAffiliation= ArrayList<String>()
     var affiliation= String()
     var assignment= String()
+    var staffName= String()
+    var selectedPos:Int=99
+
+    lateinit var updatableChild:HashMap<String,Any>
+    lateinit var teamassignmentList:MutableList<TeamAssignmentDataClass>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_editteam)
+        staffNameArray=intent.getStringArrayListExtra("staffName")
+        staffAssignment=intent.getStringArrayListExtra("staffAssignment")
+        staffAffiliation=intent.getStringArrayListExtra("staffAffiliation")
 
+        loadtray()
         spinner()
+        teameditProjectTab.setOnClickListener {
+            onBackPressed()
+        }
         edittexts()
-        teamupdatebtn.setOnClickListener {  }
+        teamupdatebtn.setOnClickListener { addActivity() }
+    }
+
+    fun loadtray(){
+        teamassignmentList= mutableListOf()
+
+        val database= FirebaseDatabase.getInstance().getReference()
+        database.child("teamassignment"). addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (user in dataSnapshot.children){
+
+                    val project=dataSnapshot.child(0.toString()).getValue(TeamAssignmentDataClass::class.java)
+                    teamassignmentList.add(project!!)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Failed to read value
+                Log.w("test", "Failed to read value.", error.toException())
+            }
+        })
+
     }
 
     fun spinner(){
 
-        val staffName=intent.getStringArrayListExtra("staffName")
-        val staffAssignment=intent.getStringArrayListExtra("staffAssignment")
-        val staffAffiliation=intent.getStringArrayListExtra("staffAffiliation")
 
 
-        Log.d("staff1",staffName[0])
-        staffselectionspinner.adapter=ArrayAdapter(this,R.layout.spinner_item,staffName)
+        staffselectionspinner.adapter=ArrayAdapter(this,R.layout.spinner_item, staffNameArray)
 
         //item selected listener for spinner
         staffselectionspinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -41,24 +87,81 @@ class EditTeamActivity:AppCompatActivity(){
             }
 
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                Toast.makeText(this@EditTeamActivity, staffName[p2], LENGTH_LONG).show()
+                Toast.makeText(this@EditTeamActivity, staffNameArray[p2], LENGTH_LONG).show()
                 assignment=staffAssignment[p2]
                 affiliation=staffAffiliation[p2]
+
+
+                staff_assignment.hint=assignment
+                staff_affiliation.hint=affiliation
+                staffName=staffNameArray[p2]
+                staff_name.hint=staffName
             }
 
         }
-
-        staff_assignment.hint=assignment
-        staff_affiliation.hint=affiliation
 
 
 
     }
 
     fun edittexts(){
-        val staffName=staff_name.text.toString().trim()
-        val staffAssignment=staff_assignment.text.toString().trim()
-        val staffAffiliation=staff_affiliation.text.toString().trim()
+
+
+        staff_name.setTextColor(resources.getColor(R.color.white))
+        staff_name.setHintTextColor(resources.getColor(R.color.unchanged))
+
+        staff_assignment.setTextColor(resources.getColor(R.color.white))
+        staff_assignment.setHintTextColor(resources.getColor(R.color.unchanged))
+
+        staff_affiliation.setTextColor(resources.getColor(R.color.white))
+        staff_affiliation.setHintTextColor(resources.getColor(R.color.unchanged))
+    }
+
+    fun addActivity(){
+
+        val staffNameET=staff_name.text.toString().trim()
+        val staffAssignmentET=staff_assignment.text.toString().trim()
+        val staffAffiliationET=staff_affiliation.text.toString().trim()
+
+
+        var getStaffname = staffNameET
+        if (getStaffname=="")
+        {getStaffname=staffName}
+
+        var getStaffassignment=staffAssignmentET
+        if (getStaffassignment=="")
+        {getStaffassignment=assignment}
+
+        var getAffiliation=staffAffiliationET
+        if (getAffiliation=="")
+        {getAffiliation=affiliation}
+
+        /*STRINGREQUEST KETAANONDEEEEE*/
+
+
+        val database= FirebaseDatabase.getInstance().getReference("teamassignment")
+
+        /*fetch all updates*/
+
+        teamassignmentList[0].staffName[selectedPos]=getStaffname
+        teamassignmentList[0].staffAssignment[selectedPos]=getStaffassignment
+        teamassignmentList[0].affiliation[selectedPos]=getAffiliation
+
+        /*package with change*/
+
+        val toUpdateStaffname=teamassignmentList[0].staffName
+        val toUpdateStaffAssignment=teamassignmentList[0].staffAssignment
+        val toUpdateAffiliation=teamassignmentList[0].affiliation
+
+        /*put those in table*/
+
+        updatableChild.put("staffName", toUpdateStaffname)
+        updatableChild.put("staffAssignment", toUpdateStaffAssignment)
+        updatableChild.put("affiliation", toUpdateAffiliation)
+
+        /*update in database*/
+
+        database.updateChildren(updatableChild)
 
 
     }
