@@ -131,11 +131,14 @@ class EditClientDetail:AppCompatActivity(){
             val staffName=intent.getStringArrayListExtra("staffName")
             val staffAssignment=intent.getStringArrayListExtra("staffAssignment")
             val staffAffiliation=intent.getStringArrayListExtra("staffAffiliation")
+            val projectName=intent.getStringExtra("cN")
+            Log.d("projectName",projectName)
 
             val intent:Intent= Intent(this,EditTeamActivity::class.java)
             intent.putStringArrayListExtra("staffName",staffName)
             intent.putStringArrayListExtra("staffAssignment",staffAssignment)
             intent.putStringArrayListExtra("staffAffiliation",staffAffiliation)
+            intent.putExtra("projectName",projectName)
             startActivity(intent)
 
         }

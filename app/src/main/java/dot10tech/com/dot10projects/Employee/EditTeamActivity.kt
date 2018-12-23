@@ -1,5 +1,6 @@
 package dot10tech.com.dot10projects.Employee
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -8,8 +9,10 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
+import com.android.volley.AuthFailureError
 import com.android.volley.Request
 import com.android.volley.Response
+import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -18,11 +21,14 @@ import com.google.firebase.database.ValueEventListener
 import dot10tech.com.dot10projects.FirebaseData.ProjectsDataClass
 
 import dot10tech.com.dot10projects.FirebaseData.TeamAssignmentDataClass
+import dot10tech.com.dot10projects.MainActivity
+import dot10tech.com.dot10projects.Networking.VolleySingleton
 import dot10tech.com.dot10projects.R
 import dot10tech.com.dot10projects.UI.EndPoints
 
 
 import kotlinx.android.synthetic.main.activity_editteam.*
+import org.json.JSONException
 import org.json.JSONObject
 
 class EditTeamActivity:AppCompatActivity(){
@@ -38,6 +44,7 @@ class EditTeamActivity:AppCompatActivity(){
     lateinit var teamassignmentList:MutableList<TeamAssignmentDataClass>
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        updatableChild= hashMapOf()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_editteam)
         staffNameArray=intent.getStringArrayListExtra("staffName")
@@ -88,6 +95,7 @@ class EditTeamActivity:AppCompatActivity(){
 
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                 Toast.makeText(this@EditTeamActivity, staffNameArray[p2], LENGTH_LONG).show()
+                selectedPos=p2
                 assignment=staffAssignment[p2]
                 affiliation=staffAffiliation[p2]
 
@@ -136,32 +144,69 @@ class EditTeamActivity:AppCompatActivity(){
         if (getAffiliation=="")
         {getAffiliation=affiliation}
 
-        /*STRINGREQUEST KETAANONDEEEEE*/
+        val stringRequest = object : StringRequest(Request.Method.POST, EndPoints.UPDATETEAM_URL, Response.Listener<String>{
+                response ->
+            try {
+                val obj = JSONObject(response)
+                Toast.makeText(applicationContext, obj.getString("message"), Toast.LENGTH_SHORT).show()
+
+                val database= FirebaseDatabase.getInstance().getReference("teamassignment")
+
+                /*fetch all updates*/
+
+                teamassignmentList[0].staffName[selectedPos]=getStaffname
+                teamassignmentList[0].staffAssignment[selectedPos]=getStaffassignment
+                teamassignmentList[0].affiliation[selectedPos]=getAffiliation
+
+                /*package with change*/
+
+                val toUpdateStaffname=teamassignmentList[0].staffName
+                val toUpdateStaffAssignment=teamassignmentList[0].staffAssignment
+                val toUpdateAffiliation=teamassignmentList[0].affiliation
+
+                /*put those in table*/
+
+                updatableChild.put("staffName", toUpdateStaffname)
+                updatableChild.put("staffAssignment", toUpdateStaffAssignment)
+                updatableChild.put("affiliation", toUpdateAffiliation)
+
+                /*update in database*/
+
+                database.updateChildren(updatableChild)
+
+                val intent= Intent(this, MainActivity::class.java)
+                startActivity(intent)
+            }catch (e: JSONException){
+                e.printStackTrace()
+            }
+
+        }, object : Response.ErrorListener{
+            override fun onErrorResponse(volleyError: VolleyError) {
+                Toast.makeText(applicationContext, volleyError.message, Toast.LENGTH_LONG).show()
+            }
+        }){
+            @Throws(AuthFailureError::class)
+            override fun getParams(): Map<String, String> {
+                val params = HashMap<String, String>()
+
+                Log.d("allParams","getstaffname:"+getStaffname+"staffname:"+
+                        staffName+"getstaffassign:"+getStaffassignment+"getProject:"+intent.getStringExtra("projectName")+
+                "getAffli:"+getAffiliation)
+                params.put("name", getStaffname)
+                params.put("oldname", staffName)
+
+                params.put("assignment", getStaffassignment)
+                params.put("project",intent.getStringExtra("projectName"))
+
+                params.put("Affiliation", getAffiliation)
 
 
-        val database= FirebaseDatabase.getInstance().getReference("teamassignment")
+                return params
+            }
+        }
 
-        /*fetch all updates*/
 
-        teamassignmentList[0].staffName[selectedPos]=getStaffname
-        teamassignmentList[0].staffAssignment[selectedPos]=getStaffassignment
-        teamassignmentList[0].affiliation[selectedPos]=getAffiliation
-
-        /*package with change*/
-
-        val toUpdateStaffname=teamassignmentList[0].staffName
-        val toUpdateStaffAssignment=teamassignmentList[0].staffAssignment
-        val toUpdateAffiliation=teamassignmentList[0].affiliation
-
-        /*put those in table*/
-
-        updatableChild.put("staffName", toUpdateStaffname)
-        updatableChild.put("staffAssignment", toUpdateStaffAssignment)
-        updatableChild.put("affiliation", toUpdateAffiliation)
-
-        /*update in database*/
-
-        database.updateChildren(updatableChild)
+        VolleySingleton.instance?.addToRequestQueue(stringRequest)
 
 
     }
