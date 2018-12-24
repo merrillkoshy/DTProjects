@@ -3,7 +3,6 @@ package dot10tech.com.dot10projects.DataLayer
 import android.util.Log
 import com.google.firebase.database.FirebaseDatabase
 import dot10tech.com.dot10projects.FirebaseData.AdminsDataClass
-import dot10tech.com.dot10projects.FirebaseData.UsersDataClass
 import okhttp3.*
 import java.io.IOException
 

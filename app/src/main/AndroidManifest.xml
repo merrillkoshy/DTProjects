@@ -80,6 +80,7 @@
         <activity android:name=".Admin.ClientDetails.AddNewProjectDetails"/>
         <activity android:name=".Employee.EmployeeDashboard"/>
         <activity android:name=".Chats.Chatbox"/>
+        <activity android:name=".Chats.ChatTestFire"/>
 
     </application>
 

@@ -4,13 +4,19 @@ import android.content.Intent
 import android.graphics.Paint
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.widget.Toast
 import com.android.volley.AuthFailureError
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.squareup.picasso.Picasso
+import dot10tech.com.dot10projects.FirebaseData.ProjectsDataClass
 import dot10tech.com.dot10projects.MainActivity
 import dot10tech.com.dot10projects.Networking.VolleySingleton
 import dot10tech.com.dot10projects.R
@@ -21,7 +27,8 @@ import org.json.JSONObject
 
 
 class AddNewProjectDetails:AppCompatActivity(){
-
+    lateinit var projectdetailsList:MutableList<ProjectsDataClass>
+    lateinit var addableChild:HashMap<String,Any>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,8 +36,31 @@ class AddNewProjectDetails:AppCompatActivity(){
         initialise()
     }
 
+    fun loadTray(){
+
+        val database= FirebaseDatabase.getInstance().getReference()
+        database.child("projectdetails").addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (user in dataSnapshot.children){
+                    Log.d("project", "Value is: ${user.value}")
+                    val project=dataSnapshot.child(0.toString()).getValue(ProjectsDataClass::class.java)
+                    projectdetailsList.add(project!!)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Failed to read value
+                Log.w("test", "Failed to read value.", error.toException())
+            }
+        })
+
+    }
+
     fun initialise(){
 
+        loadTray()
+        projectdetailsList= mutableListOf()
+        addableChild= hashMapOf()
         val clientlogourl=intent.getStringExtra("clientLogo")
         val clientName=intent.getStringExtra("clientName")
 
@@ -117,6 +147,36 @@ class AddNewProjectDetails:AppCompatActivity(){
                 try {
                     val obj = JSONObject(response)
                     Toast.makeText(applicationContext, obj.getString("message"), Toast.LENGTH_SHORT).show()
+
+                    val database= FirebaseDatabase.getInstance().getReference("projectdetails").child("0")
+
+
+
+                    /*put in table*/
+
+
+
+                    projectdetailsList[0].clientName.add(clientName)
+                    projectdetailsList[0].startDate.add(startDate)
+                    projectdetailsList[0].deadLine.add(deadline)
+                    projectdetailsList[0].latestActivity.add(firsttask)
+                    projectdetailsList[0].taskDeadline.add(firsttaskdeadline)
+                    projectdetailsList[0].taskStatus.add("Pending")
+                    projectdetailsList[0].overallProgress.add("1")
+
+                    addableChild.put("clientName", projectdetailsList[0].clientName)
+                    addableChild.put("startDate",  projectdetailsList[0].startDate)
+                    addableChild.put("deadLine",  projectdetailsList[0].deadLine)
+                    addableChild.put("latestActivity",  projectdetailsList[0].latestActivity)
+                    addableChild.put("taskDeadline",  projectdetailsList[0].taskDeadline)
+                    addableChild.put("taskStatus",  projectdetailsList[0].taskStatus)
+                    addableChild.put("overallProgress",  projectdetailsList[0].overallProgress)
+
+
+                    /*add in database*/
+
+                    database.updateChildren(addableChild)
+
 
                     val intent= Intent(this, MainActivity::class.java)
                     startActivity(intent)

@@ -150,10 +150,10 @@ class EditTeamActivity:AppCompatActivity(){
                 val obj = JSONObject(response)
                 Toast.makeText(applicationContext, obj.getString("message"), Toast.LENGTH_SHORT).show()
 
-                val database= FirebaseDatabase.getInstance().getReference("teamassignment")
+                val database= FirebaseDatabase.getInstance().getReference("teamassignment").child("0")
 
                 /*fetch all updates*/
-
+                Log.d("selectedPos",":"+selectedPos)
                 teamassignmentList[0].staffName[selectedPos]=getStaffname
                 teamassignmentList[0].staffAssignment[selectedPos]=getStaffassignment
                 teamassignmentList[0].affiliation[selectedPos]=getAffiliation

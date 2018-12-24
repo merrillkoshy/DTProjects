@@ -41,7 +41,6 @@ import java.util.ArrayList
 
 class EditClientDetail:AppCompatActivity(){
 
-    private var targetEmp = String()
     val staffName = ArrayList<String>()
     val staffAssignment = ArrayList<String>()
     val workingProject = ArrayList<String>()
@@ -91,7 +90,6 @@ class EditClientDetail:AppCompatActivity(){
         ts_et.setHintTextColor(resources.getColor(R.color.unchanged))
 
 
-        fetchJsonEmp()
         Picasso.
             get().
             load("https:dot10tech.com/mobileApp/assets/appicon.png").
@@ -146,26 +144,6 @@ class EditClientDetail:AppCompatActivity(){
 
     }
 
-    fun fetchJsonEmp(){
-        val url = "https://dot10tech.com/mobileapp/scripts/teamAssignmentView.php"
-
-        val client = OkHttpClient()
-        val request = okhttp3.Request.Builder().url(url).build()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onResponse(call: Call, response: okhttp3.Response) {
-                val body = response.body()?.string()
-
-                //Slicing the response
-                targetEmp = body.toString()
-
-            }
-
-            override fun onFailure(call: Call, e: IOException) {
-                println("Failed to execute request")
-            }
-        })
-    }
 
     override fun onSupportNavigateUp(): Boolean {
         val intent= Intent(this,MainActivity::class.java)

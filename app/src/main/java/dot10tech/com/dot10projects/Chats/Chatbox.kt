@@ -123,8 +123,8 @@ class Chatbox:AppCompatActivity(){
                 startActivityForResult(intent, CAMERA)
             }
 
-        val date=intent.getStringArrayListExtra("date")
-        Log.d("datesize",":"+date.size)
+        /*val date=intent.getStringArrayListExtra("date")
+        Log.d("datesize",":"+date.size)*/
 
         recyclerView = findViewById(R.id.cbox) as RecyclerView
 
@@ -196,43 +196,7 @@ class Chatbox:AppCompatActivity(){
 
     }
 
-/*    fun saveImage(myBitmap: Bitmap):String {
-        val bytes = ByteArrayOutputStream()
-        myBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
-        val wallpaperDirectory = File(
-            (Environment.getExternalStorageDirectory()).toString() + IMAGE_DIRECTORY
-        )
-        // have the object build the directory structure, if needed.
-        Log.d("fee",wallpaperDirectory.toString())
-        if (!wallpaperDirectory.exists())
-        {
 
-            wallpaperDirectory.mkdirs()
-        }
-
-        try
-        {
-            Log.d("heel",wallpaperDirectory.toString())
-            val f = File(wallpaperDirectory, ((Calendar.getInstance()
-                .getTimeInMillis()).toString() + ".jpg"))
-            f.createNewFile()
-            val fo = FileOutputStream(f)
-            fo.write(bytes.toByteArray())
-            MediaScannerConnection.scanFile(this,
-                arrayOf(f.getPath()),
-                arrayOf("image/jpeg"), null)
-            fo.close()
-            Log.d("TAG", "File Saved::--->" + f.getAbsolutePath())
-            uploadFile(f)
-            return f.getAbsolutePath()
-        }
-        catch (e1: IOException) {
-            e1.printStackTrace()
-        }
-
-
-        return ""
-    }*/
 
     private fun uploadFile(f: File) {
         if(EasyPermissions.hasPermissions(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {

@@ -18,7 +18,14 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import dot10tech.com.dot10projects.Chats.ChatTestFire
 import dot10tech.com.dot10projects.Chats.Chatbox
+import dot10tech.com.dot10projects.FirebaseData.ChatDataClass
+import dot10tech.com.dot10projects.FirebaseData.TeamAssignmentDataClass
 import dot10tech.com.dot10projects.MainActivity
 import dot10tech.com.dot10projects.Networking.VolleySingleton
 import dot10tech.com.dot10projects.UI.EndPoints
@@ -42,6 +49,7 @@ class EmployeeDashboard:AppCompatActivity(), GestureDetector.OnGestureListener{
     private var commentedpic= String()
     private val READ_REQUEST_CODE= 300
     private val pictureImagePath = ""
+    lateinit var chatDetailsList:MutableList<ChatDataClass>
 
     var gDetector: GestureDetectorCompat? = null
 
@@ -55,7 +63,8 @@ class EmployeeDashboard:AppCompatActivity(), GestureDetector.OnGestureListener{
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
 
-        fetchJson()
+        loadTray()
+        chatDetailsList= mutableListOf()
         initialise()
     }
 
@@ -132,7 +141,22 @@ class EmployeeDashboard:AppCompatActivity(), GestureDetector.OnGestureListener{
     }
 
 
+    fun loadTray(){
+        val dB= FirebaseDatabase.getInstance().getReference()
+        dB.child("chat").child("TITO").addValueEventListener(object: ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for (user in dataSnapshot.children){
+                    val chatdetail=dataSnapshot.getValue(ChatDataClass::class.java)
+                    chatDetailsList.add(chatdetail!!)
+                }
+            }
 
+            override fun onCancelled(error: DatabaseError) {
+                // Failed to read value
+                Log.w("test", "Failed to read value.", error.toException())
+            }
+        })
+    }
 
 
 
@@ -151,60 +175,25 @@ class EmployeeDashboard:AppCompatActivity(), GestureDetector.OnGestureListener{
 
     override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
         if (e1!!.getX() - e2!!.getX() > 50) {
-            val clientArray = target.replace("[", "").replace("]", "").replace("\"", "").split(",")
 
-            Log.d("commentpostsize",""+clientArray.size)
-            Log.d("target",""+target[0])
-            var i = 0
-            var j = 1
-            var k = 2
-            var l = 3
-
-            val usernames = ArrayList<String>()
-            val messages = ArrayList<String>()
-            val dateandtimes = ArrayList<String>()
-            val categories = ArrayList<String>()
-
-            Log.d("size", "" + clientArray.size)
-            val size = clientArray.size
-            while (i < size) {
-                val un = clientArray[i]
-                usernames.add(un)
-                i += 4
-
-            }
-            while (j < size) {
-                val pw = clientArray[j]
-                messages.add(pw)
-                j += 4
-            }
-            while (k < size) {
-                val pw = clientArray[k]
-                dateandtimes.add(pw)
-                k += 4
-            }
-            while (l < size) {
-                val pw = clientArray[l]
-                categories.add(pw)
-                l += 4
-            }
 
             val clientName=intent.getStringExtra("cN")
             val imageUrl=intent.getStringExtra("ciU").replace("\\","")
-            val startchatbox=Intent(this, Chatbox::class.java)
+            val startchatbox=Intent(this, ChatTestFire::class.java)
 
             startchatbox.putExtra("affliation_icon",imageUrl)
             startchatbox.putExtra("clientname",clientName)
-            startchatbox.putExtra("usernames",usernames)
-            startchatbox.putExtra("messages",messages)
-            startchatbox.putExtra("dateandtimes",dateandtimes)
-            startchatbox.putExtra("categories",categories)
+            startchatbox.putExtra("usernames",chatDetailsList[0].username)
+            startchatbox.putExtra("messages",chatDetailsList[0].message)
+            startchatbox.putExtra("dateandtimes",chatDetailsList[0].dateandtime)
+            startchatbox.putExtra("categories",chatDetailsList[0].category)
+
             startchatbox.putExtra("category","Team")
             startchatbox.putExtra("username",username)
             startchatbox.putExtra("message",commentpost)
             startchatbox.putExtra("dateandtime",dateandtime)
-            startchatbox.putExtra("date",dateandtime.split("\\/")[0])
-            startchatbox.putExtra("time",dateandtime.split("\\/")[1])
+            /*startchatbox.putExtra("date",dateandtime.split("\\/")[0])
+            startchatbox.putExtra("time",dateandtime.split("\\/")[1])*/
 
 
             startActivity(startchatbox)
@@ -256,27 +245,7 @@ class EmployeeDashboard:AppCompatActivity(), GestureDetector.OnGestureListener{
     }
 
 
-    fun fetchJson() {
-        val url = "https://dot10tech.com/mobileapp/scripts/chats/viewChat.php"
 
-        val client = OkHttpClient()
-        val request = okhttp3.Request.Builder().url(url).build()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onResponse(call: Call, response: okhttp3.Response) {
-                val body = response.body()?.string()
-
-                //Slicing the response
-                target = body.toString()
-
-            }
-
-            override fun onFailure(call: Call, e: IOException) {
-                println("Failed to execute request")
-            }
-        })
-
-    }
 
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()

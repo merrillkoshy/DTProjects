@@ -161,18 +161,20 @@ class LoginScreen:AppCompatActivity(){
 
 
                 var i=0
+                var j=0
                 var match="fail"
                 var pos=0
                 var getP=""
+                var adminMatch="fail"
 
-                while (i < usercredList.size)
+                while (i < usercredList[0].username.size)
                 {
 
-                    if (usercredList[i].username[i]==username.text.trim().toString())
+                    if (usercredList[0].username[i]==username.text.trim().toString())
                     {
                         match="pass"
                         pos=i
-                        getP=usercredList[i].password[i]
+                        getP=usercredList[0].password[i]
                         break
                     }
                     i++
@@ -180,11 +182,36 @@ class LoginScreen:AppCompatActivity(){
                 if(getP==password.text.trim().toString())
                     match+="pass"
                 Log.d("match",match)
+
+
+
+
+
+                while (j < admincredList[0].username.size)
+                {
+
+                    if (admincredList[0].username[j]==username.text.trim().toString())
+                    {
+                        adminMatch="pass"
+                        pos=j
+                        getP=admincredList[0].password[j]
+                        break
+                    }
+                    j++
+                }
+                if(getP==password.text.trim().toString())
+                    adminMatch+="pass"
+                Log.d("adminmatch",adminMatch)
+
+
+
+
+
                 if (match=="passpass") {
-                    val category=usercredList[pos].password[pos]
+                    val category=usercredList[0].category[pos]
 
                     if(category.toString().trim()!="Client") {
-                        employeeintent.putExtra("username",usercredList[pos].username[pos])
+                        employeeintent.putExtra("username",usercredList[0].username[pos])
                         employeeintent.putExtra("cN", clientName)
                         employeeintent.putExtra("ciU", clientImageUrl)
                         employeeintent.putExtra("category", category)
@@ -213,6 +240,14 @@ class LoginScreen:AppCompatActivity(){
                         dialog.show()
                     }
 
+                }
+                else if(adminMatch=="passpass"){
+                    employeeintent.putExtra("username",admincredList[0].first_name[pos]+" "+admincredList[0].last_name[pos])
+                    employeeintent.putExtra("cN", clientName)
+                    employeeintent.putExtra("ciU", clientImageUrl)
+                    employeeintent.putExtra("category", "Admin")
+                    startActivity(employeeintent)
+                    finish()
                 }
             }
 

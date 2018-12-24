@@ -29,11 +29,13 @@ class SplashActivity : AppCompatActivity() {
         //Initialize the Handler
         mDelayHandler = Handler()
         FirebaseDatabase.getInstance().setPersistenceEnabled(true)
+
         UserCredentials().fetchJson_UserCredTable()
         AdminCredentials().fetchJson_CredTable()
         ClientDetails().fetchJson()
         ProjectDetails().fetchProjectDetailsasJson()
         TeamAssignmentDetails().fetchJsonEmp()
+        /*ChatDetails().fetchJson()*/
 
         //Navigate with delay
         mDelayHandler!!.postDelayed(mRunnable, SPLASH_DELAY)
