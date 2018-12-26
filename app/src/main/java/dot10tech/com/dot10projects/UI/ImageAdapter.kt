@@ -197,7 +197,6 @@ class ImageAdapter(
             }
             else if(intention=="workon"){
                 pagerImageView.setOnClickListener{
-
                     val database= FirebaseDatabase.getInstance().getReference()
                     database.child("projectdetails").addValueEventListener(object : ValueEventListener {
                         override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -219,10 +218,12 @@ class ImageAdapter(
                                 }
 
                                 pagerImageView.startAnimation(animateOnSelect)
+
                                 val intent= Intent(mContext, EmployeeDashboard::class.java )
 
                                 intent.putExtra("ciU", imageUrl)
                                 intent.putExtra("username",username)
+                                intent.putExtra("category",category)
                                 intent.putExtra("cN",projectdetailsList[0].clientName[flag])
                                 intent.putExtra("sd",projectdetailsList[0].startDate[flag])
                                 intent.putExtra("dl",projectdetailsList[0].deadLine[flag])

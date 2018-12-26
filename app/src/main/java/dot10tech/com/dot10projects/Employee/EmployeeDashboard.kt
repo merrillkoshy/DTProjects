@@ -63,7 +63,7 @@ class EmployeeDashboard:AppCompatActivity(), GestureDetector.OnGestureListener{
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
 
-        loadTray()
+
         chatDetailsList= mutableListOf()
         initialise()
     }
@@ -141,22 +141,7 @@ class EmployeeDashboard:AppCompatActivity(), GestureDetector.OnGestureListener{
     }
 
 
-    fun loadTray(){
-        val dB= FirebaseDatabase.getInstance().getReference()
-        dB.child("chat").child("TITO").addValueEventListener(object: ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                for (user in dataSnapshot.children){
-                    val chatdetail=dataSnapshot.getValue(ChatDataClass::class.java)
-                    chatDetailsList.add(chatdetail!!)
-                }
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-                // Failed to read value
-                Log.w("test", "Failed to read value.", error.toException())
-            }
-        })
-    }
 
 
 
@@ -183,12 +168,10 @@ class EmployeeDashboard:AppCompatActivity(), GestureDetector.OnGestureListener{
 
             startchatbox.putExtra("affliation_icon",imageUrl)
             startchatbox.putExtra("clientname",clientName)
-            startchatbox.putExtra("usernames",chatDetailsList[0].username)
-            startchatbox.putExtra("messages",chatDetailsList[0].message)
-            startchatbox.putExtra("dateandtimes",chatDetailsList[0].dateandtime)
-            startchatbox.putExtra("categories",chatDetailsList[0].category)
 
-            startchatbox.putExtra("category","Team")
+            val category=intent.getStringExtra("category")
+            Log.d("category1",category)
+            startchatbox.putExtra("category",category)
             startchatbox.putExtra("username",username)
             startchatbox.putExtra("message",commentpost)
             startchatbox.putExtra("dateandtime",dateandtime)
