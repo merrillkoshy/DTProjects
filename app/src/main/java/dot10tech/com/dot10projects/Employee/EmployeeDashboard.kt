@@ -41,7 +41,7 @@ class EmployeeDashboard:AppCompatActivity(), GestureDetector.OnGestureListener{
     private val TAG = MainActivity::class.java.getSimpleName();
     private var target = String()
     private var commentpost= String()
-    private var dateandtime= String()
+
     private var username= String()
     private var theUri=Uri.EMPTY
 
@@ -141,11 +141,6 @@ class EmployeeDashboard:AppCompatActivity(), GestureDetector.OnGestureListener{
     }
 
 
-
-
-
-
-
     override fun onShowPress(e: MotionEvent?) {
         print(e)
     }
@@ -174,9 +169,6 @@ class EmployeeDashboard:AppCompatActivity(), GestureDetector.OnGestureListener{
             startchatbox.putExtra("category",category)
             startchatbox.putExtra("username",username)
             startchatbox.putExtra("message",commentpost)
-            startchatbox.putExtra("dateandtime",dateandtime)
-            /*startchatbox.putExtra("date",dateandtime.split("\\/")[0])
-            startchatbox.putExtra("time",dateandtime.split("\\/")[1])*/
 
 
             startActivity(startchatbox)
@@ -195,7 +187,7 @@ class EmployeeDashboard:AppCompatActivity(), GestureDetector.OnGestureListener{
         print(e)
     }
 
-    fun addMessage(){
+    /*fun addMessage(){
             val stringRequest = object : StringRequest(Request.Method.POST, EndPoints.ADDNEWCHAT, Response.Listener<String>{
                     response ->
                 try {
@@ -218,14 +210,14 @@ class EmployeeDashboard:AppCompatActivity(), GestureDetector.OnGestureListener{
 
                     params.put("message", commentpost)
                     params.put("username", username)
-                    params.put("dateandtime", dateandtime)
+
                     params.put("picurl", commentedpic)
                     params.put("category", "Team")
                     return params
                 }
             }
             VolleySingleton.instance?.addToRequestQueue(stringRequest)
-    }
+    }*/
 
 
 

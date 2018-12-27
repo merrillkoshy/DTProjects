@@ -36,43 +36,41 @@ class ChatFireAdapter(
 
 
     override fun getItemCount(): Int {
-        if (fireBaseDataOf[0].username.size==0)
+        if(fireBaseDataOf.isEmpty())
             return 1
         else
             return fireBaseDataOf[0].username.size
     }
 
     override fun onBindViewHolder(p0: MyViewHolder, p1: Int) {
-        Log.d("field1",""+fireBaseDataOf)
-        Log.d("field1",""+fireBaseDataOf[0].username.size)
-        if (fireBaseDataOf[0].username[p1]=="startval") {
-            p0.postername.text = ""
-            p0.message.text=""
-            p0.time.text=""
-        }
-        p0.postername.text=fireBaseDataOf[0].username[p1]
-        val message=fireBaseDataOf[0].message[p1]
-        if(!message.contains("https:")) {
-            p0.message.visibility=View.VISIBLE
-            p0.cp.visibility=View.GONE
-            p0.message.text = message
-        }
-        else if(message.contains("https:")){
-            p0.cp.visibility=View.VISIBLE
-            p0.message.visibility=View.GONE
-            Picasso.get().load(message).placeholder(R.drawable.progress_animation).into(p0.cp)
-        }
-        Picasso.get().load(affiliation_icon).placeholder(R.drawable.progress_animation).into(p0.iv)
+        if(!fireBaseDataOf.isEmpty()) {
+            if (fireBaseDataOf[0].username[p1] == "startval") {
+                p0.postername.text = ""
+                p0.message.text = ""
+                p0.time.text = ""
+            }
+            p0.postername.text = fireBaseDataOf[0].username[p1]
+            val message = fireBaseDataOf[0].message[p1]
+            if (!message.contains("https:")) {
+                p0.message.visibility = View.VISIBLE
+                p0.cp.visibility = View.GONE
+                p0.message.text = message
+            } else if (message.contains("https:")) {
+                p0.cp.visibility = View.VISIBLE
+                p0.message.visibility = View.GONE
+                Picasso.get().load(message).placeholder(R.drawable.progress_animation).into(p0.cp)
+            }
+            Picasso.get().load(affiliation_icon).placeholder(R.drawable.progress_animation).into(p0.iv)
 
-        if (fireBaseDataOf[0].category[p1]=="Admin") {
-            p0.badge.visibility = View.VISIBLE
-            Picasso.get().load(R.drawable.badge_admin).placeholder(R.drawable.progress_animation).into(p0.badge)
+            if (fireBaseDataOf[0].category[p1] == "Admin") {
+                p0.badge.visibility = View.VISIBLE
+                Picasso.get().load(R.drawable.badge_admin).placeholder(R.drawable.progress_animation).into(p0.badge)
+            } else if (fireBaseDataOf[0].category[p1] != "Admin") {
+                p0.badge.visibility = View.GONE
+            }
+            val time = fireBaseDataOf[0].dateandtime[p1].split("/")[1]
+            p0.time.text = time
         }
-        else if(fireBaseDataOf[0].category[p1]!="Admin"){
-            p0.badge.visibility = View.GONE
-        }
-        val time=fireBaseDataOf[0].dateandtime[p1].split("/")[1]
-        p0.time.text=time
     }
 
 

@@ -106,25 +106,14 @@ lateinit var addableChild:HashMap<String,Any>
         adapter= ChatFireAdapter(this,chatDetailsList,affiliation)
         cbox.adapter=adapter
         cbox.layoutManager=LinearLayoutManager(applicationContext,LinearLayoutManager.VERTICAL, false)
-        if(chatDetailsList[0].username.size>1)
-            cbox.scrollToPosition(chatDetailsList[0].username.size-1)
+        if(!chatDetailsList.isEmpty()) {
+            if (chatDetailsList[0].username.size > 1)
+                cbox.scrollToPosition(chatDetailsList[0].username.size - 1)
+        }
     }
     fun loadinDataClass(){
 
 
-
-
-        var dateforuid=String()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val current = LocalTime.now().toString()
-            val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss")
-            dateforuid = current.format(formatter)
-        } else {
-            var dateF = Date();
-            val formatter = SimpleDateFormat("MMM dd yyyy")
-            dateforuid = formatter.format(dateF)
-
-        }
         val database= FirebaseDatabase.getInstance().getReference("chat").child(clientname)
         val uid =database.push().key
         val allUsers: List<ChatDataClass> = mutableListOf(
@@ -172,17 +161,13 @@ lateinit var addableChild:HashMap<String,Any>
 
             commentpost=chatcomment.text.trim().toString()
             chatcomment.text.clear()
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val current = LocalTime.now().toString()
-                val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss")
-                dateandtime = current.format(formatter)
-            } else {
+
                 var dateF = Date();
                 val formatter = SimpleDateFormat("MMM dd yyyy/HH:mma")
                 dateandtime = formatter.format(dateF)
                 date=dateandtime.split("/")[0]
                 time=dateandtime.split("/")[1]
-            }
+
 
             if(chatDetailsList[0].username[0]!="startval") {
                 chatDetailsList[0].username.add(username)
@@ -225,29 +210,28 @@ lateinit var addableChild:HashMap<String,Any>
             val dateCalc = Date()
 
             val df = SimpleDateFormat("mm-ss")
+            if(EasyPermissions.hasPermissions(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                val newPicFile = df.format(dateCalc) + ".jpg"
+                val outPath = "/sdcard/" + IMAGE_DIRECTORY + "/$newPicFile"
+                val outFile = File(outPath)
 
-            val newPicFile = df.format(dateCalc) + ".jpg"
-            val outPath = "/sdcard/"+ IMAGE_DIRECTORY +"/$newPicFile"
-            val outFile = File(outPath)
+                mCameraFileName = outFile.toString()
+                val outuri = Uri.fromFile(outFile)
 
-            mCameraFileName = outFile.toString()
-            val outuri = Uri.fromFile(outFile)
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val current = LocalTime.now().toString()
-                val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss")
-                dateandtime = current.format(formatter)
-            } else {
                 var dateF = Date();
                 val formatter = SimpleDateFormat("MMM dd yyyy/HH:mma")
                 dateandtime = formatter.format(dateF)
-                date=dateandtime.split("/")[0]
-                time=dateandtime.split("/")[1]
+                date = dateandtime.split("/")[0]
+                time = dateandtime.split("/")[1]
+
+
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, outuri)
+                startActivityForResult(intent, CAMERA)
             }
-
-            intent.putExtra(MediaStore.EXTRA_OUTPUT,outuri)
-            startActivityForResult(intent, CAMERA)
-
+            else{
+                EasyPermissions.requestPermissions(this, getString(R.string.write_to_file), READ_REQUEST_CODE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            }
 
         }
 
@@ -263,6 +247,7 @@ lateinit var addableChild:HashMap<String,Any>
         val file = File(mCameraFileName)
         if (!file.exists()) {
             file.mkdir()}
+
         Picasso.get().load(file).placeholder(R.drawable.progress_animation).into(uploadtest)
         uploadtest.visibility= View.VISIBLE
 
@@ -274,17 +259,13 @@ lateinit var addableChild:HashMap<String,Any>
         Toast.makeText(this@ChatTestFire, "Image Saved!", Toast.LENGTH_SHORT).show()
 
         if(commentedpic!=""){
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val current = LocalTime.now().toString()
-                val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. HH:mm:ss")
-                dateandtime = current.format(formatter)
-            } else {
+
                 var dateF = Date();
                 val formatter = SimpleDateFormat("MMM dd yyyy/HH:mma")
                 dateandtime = formatter.format(dateF)
                 date=dateandtime.split("/")[0]
                 time=dateandtime.split("/")[1]
-            }
+
         }
 
 
